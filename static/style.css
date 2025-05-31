@@ -116,7 +116,7 @@ body {
     transform: translateY(-1px);
 }
 
-/* Bookmark Button (Save to Journal) */
+/* Save to Journal */
 .bookmarkBtn {
     width: 180px;
     height: 45px;
@@ -133,8 +133,8 @@ body {
 }
 
 .bookmarkBtn .IconContainer {
-    width: 30px;
-    height: 30px;
+    width: 34px;
+    height: 34px;
     background: linear-gradient(to bottom, rgb(255, 136, 255), rgb(172, 70, 255));
     border-radius: 50px;
     display: flex;
