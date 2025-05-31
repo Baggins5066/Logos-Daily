@@ -437,19 +437,32 @@ body {
 }
 
 /* ========================================
-   STREAK DISPLAY STYLES
+   STREAK BANNER STYLES
    ======================================== */
-.streak-display {
-    background: #1a1a1a;
-    border: 2px solid #404040;
-    border-radius: 1rem;
-    padding: 1.5rem;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+.streak-banner {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border-bottom: 3px solid #404040;
+    padding: 1rem 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    position: relative;
+    overflow: hidden;
 }
 
-.streak-icon {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+.streak-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ac46ff, transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
 
 .flame {
@@ -473,6 +486,13 @@ body {
     font-size: 1.25rem;
     font-weight: 700;
     color: #0dcaf0;
+}
+
+.streak-info {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 /* ========================================
@@ -624,7 +644,20 @@ body {
         margin-bottom: 0.5rem;
     }
 
-    .streak-display {
-        margin: 0 1rem;
+    .streak-banner {
+        padding: 0.75rem 0;
+    }
+
+    .flame {
+        font-size: 1.5rem;
+    }
+
+    .current-streak {
+        font-size: 1.1rem;
+    }
+
+    .streak-info {
+        flex-direction: column;
+        gap: 0.25rem;
     }
 }

@@ -2,17 +2,15 @@
 
 {% block content %}
 <div class="container py-5">
-    <!-- Streak Display -->
+    <!-- Streak Banner -->
     {% if streak %}
-    <div class="row justify-content-center mb-4">
-        <div class="col-auto">
-            <div class="streak-display text-center">
-                <div class="streak-icon mb-2">
-                    <span class="flame">🔥</span>
-                </div>
-                <div class="streak-info">
-                    <div class="current-streak">Day {{ streak.current_streak }}</div>
-                    <div class="text-muted small">Best: {{ streak.highest_streak }}</div>
+    <div class="streak-banner mb-4">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-center">
+                <span class="flame me-3">🔥</span>
+                <div class="streak-info text-center">
+                    <span class="current-streak me-3">Day {{ streak.current_streak }}</span>
+                    <span class="text-muted">Best: {{ streak.highest_streak }}</span>
                 </div>
             </div>
         </div>
