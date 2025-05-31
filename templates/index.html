@@ -1,21 +1,22 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div class="container py-5">
-    <!-- Streak Banner -->
-    {% if streak %}
-    <div class="streak-banner mb-4">
-        <div class="container">
-            <div class="d-flex align-items-center justify-content-center">
-                <span class="flame me-3">🔥</span>
-                <div class="streak-info text-center">
-                    <span class="current-streak me-3">Day {{ streak.current_streak }}</span>
-                    <span class="text-muted">Best: {{ streak.highest_streak }}</span>
-                </div>
+<!-- Streak Banner -->
+{% if streak %}
+<div class="streak-banner">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-center">
+            <span class="flame">🔥</span>
+            <div class="streak-info">
+                <span class="current-streak">Day {{ streak.current_streak }}</span>
+                <span class="text-muted">Best: {{ streak.highest_streak }}</span>
             </div>
         </div>
     </div>
-    {% endif %}
+</div>
+{% endif %}
+
+{% block content %}
+<div class="container py-5">
 
     <!-- Daily Quote -->
     {% if quote %}
