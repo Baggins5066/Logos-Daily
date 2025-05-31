@@ -5,14 +5,12 @@
     <!-- Streak Banner -->
     {% if streak %}
     <div class="streak-banner mb-4">
-        <div class="container">
-            <div class="d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center">
-                    <span class="flame me-2">🔥</span>
-                    <span class="current-streak">Day {{ streak.current_streak }}</span>
-                </div>
-                <span class="text-muted">Best: {{ streak.highest_streak }}</span>
+        <div class="d-flex align-items-center justify-content-between px-3">
+            <div class="d-flex align-items-center">
+                <span class="flame me-2">🔥</span>
+                <span class="current-streak">Day {{ streak.current_streak }}</span>
             </div>
+            <span class="text-muted">Best: {{ streak.highest_streak }}</span>
         </div>
     </div>
     {% endif %}

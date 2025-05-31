@@ -444,9 +444,10 @@ body {
     border-bottom: 3px solid #404040;
     padding: 1rem 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    width: 100%;
+    width: 100vw;
     position: relative;
     overflow: hidden;
+    margin-left: calc(-50vw + 50%);
 }
 
 .streak-banner::before {
