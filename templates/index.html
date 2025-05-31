@@ -68,10 +68,8 @@
                             <form method="POST" action="{{ url_for('save_quote_and_redirect') }}" class="d-inline">
                                 <input type="hidden" name="quote_id" value="{{ quote.id }}">
                                 <button type="submit" class="noteBtn">
-                                    <div class="IconContainer">
-                                        <i class="fas fa-edit icon"></i>
-                                    </div>
-                                    <div class="text">Add thought</div>
+                                    <i class="fas fa-edit icon"></i>
+                                    <span class="text">Add thought</span>
                                 </button>
                             </form>
                         </div>
