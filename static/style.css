@@ -340,3 +340,73 @@ body {
 .chat-history::-webkit-scrollbar-thumb:hover {
     background: #888888;
 }
+
+/* Animated note button - same style as bookmark button */
+.noteBtn {
+    width: 180px;
+    height: 40px;
+    border-radius: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.349);
+    background-color: rgb(12, 12, 12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition-duration: 0.3s;
+    overflow: hidden;
+    position: relative;
+}
+
+.noteBtn .IconContainer {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(to bottom, rgb(255, 193, 7), rgb(255, 152, 0));
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 2;
+    transition-duration: 0.3s;
+}
+
+.noteBtn .icon {
+    border-radius: 1px;
+    color: white;
+    font-size: 16px;
+}
+
+.noteBtn .text {
+    height: 100%;
+    width: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 1;
+    transition-duration: 0.3s;
+    font-size: 1.04em;
+    font-weight: 500;
+}
+
+.noteBtn:hover .IconContainer {
+    width: 170px;
+    transition-duration: 0.3s;
+}
+
+.noteBtn:hover .text {
+    transform: translate(10px);
+    width: 0;
+    font-size: 0;
+    transition-duration: 0.3s;
+}
+
+.noteBtn:active {
+    transform: scale(0.95);
+    transition-duration: 0.3s;
+}
+
+.noteBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

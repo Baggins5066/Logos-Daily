@@ -64,10 +64,13 @@
                             </a>
                             {% endif %}
                         </div>
-                        <div class="col-12 col-sm-6">
-                            <button type="button" class="btn btn-outline-primary w-100" id="explainBtn" 
+                        <div class="col-12 col-sm-6 d-flex justify-content-center">
+                            <button type="button" class="noteBtn" id="explainBtn" 
                                     data-quote-id="{{ quote.id }}">
-                                <i class="fas fa-lightbulb me-1"></i>Explain Quote
+                                <div class="IconContainer">
+                                    <i class="fas fa-lightbulb icon"></i>
+                                </div>
+                                <div class="text">Add Note</div>
                             </button>
                         </div>
                     </div>
@@ -160,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function getExplanation(quoteId) {
         explainBtn.disabled = true;
-        explainBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Getting explanation...';
+        explainBtn.innerHTML = '<div class="IconContainer"><i class="fas fa-spinner fa-spin icon"></i></div><div class="text">Loading...</div>';
         
         const formData = new FormData();
         formData.append('quote_id', quoteId);
@@ -185,8 +188,8 @@ document.addEventListener('DOMContentLoaded', function() {
         .finally(() => {
             explainBtn.disabled = false;
             explainBtn.innerHTML = isExplanationVisible ? 
-                '<i class="fas fa-eye-slash me-1"></i>Hide Explanation' : 
-                '<i class="fas fa-lightbulb me-1"></i>Explain Quote';
+                '<div class="IconContainer"><i class="fas fa-eye-slash icon"></i></div><div class="text">Hide Note</div>' : 
+                '<div class="IconContainer"><i class="fas fa-lightbulb icon"></i></div><div class="text">Add Note</div>';
         });
     }
     
@@ -254,18 +257,18 @@ document.addEventListener('DOMContentLoaded', function() {
     function showExplanationSection() {
         explanationSection.style.display = 'block';
         isExplanationVisible = true;
-        explainBtn.innerHTML = '<i class="fas fa-eye-slash me-1"></i>Hide Explanation';
+        explainBtn.innerHTML = '<div class="IconContainer"><i class="fas fa-eye-slash icon"></i></div><div class="text">Hide Note</div>';
     }
     
     function toggleExplanationSection() {
         if (isExplanationVisible) {
             explanationSection.style.display = 'none';
             isExplanationVisible = false;
-            explainBtn.innerHTML = '<i class="fas fa-lightbulb me-1"></i>Explain Quote';
+            explainBtn.innerHTML = '<div class="IconContainer"><i class="fas fa-lightbulb icon"></i></div><div class="text">Add Note</div>';
         } else {
             explanationSection.style.display = 'block';
             isExplanationVisible = true;
-            explainBtn.innerHTML = '<i class="fas fa-eye-slash me-1"></i>Hide Explanation';
+            explainBtn.innerHTML = '<div class="IconContainer"><i class="fas fa-eye-slash icon"></i></div><div class="text">Hide Note</div>';
         }
     }
 });
