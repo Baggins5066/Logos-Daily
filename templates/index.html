@@ -6,12 +6,12 @@
     {% if streak %}
     <div class="streak-banner mb-4">
         <div class="container">
-            <div class="d-flex align-items-center justify-content-center">
-                <span class="flame me-3">🔥</span>
-                <div class="streak-info text-center">
-                    <span class="current-streak me-3">Day {{ streak.current_streak }}</span>
-                    <span class="text-muted">Best: {{ streak.highest_streak }}</span>
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <span class="flame me-2">🔥</span>
+                    <span class="current-streak">Day {{ streak.current_streak }}</span>
                 </div>
+                <span class="text-muted">Best: {{ streak.highest_streak }}</span>
             </div>
         </div>
     </div>

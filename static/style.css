@@ -491,8 +491,9 @@ body {
 .streak-info {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width: 100%;
 }
 
 /* ========================================
