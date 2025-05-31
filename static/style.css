@@ -1,3 +1,4 @@
+
 /* ========================================
    CSS VARIABLES & ROOT STYLES
    ======================================== */
@@ -372,7 +373,9 @@ body {
     transform: translate(10px);
     width: 0;
     font-size: 0;
-    transition-duration: 0.3s;</previous_generation>
+    transition-duration: 0.3s;
+}
+
 .cancelBtn:active {
     transform: scale(0.95);
     transition-duration: 0.3s;
@@ -442,13 +445,8 @@ body {
     padding: 1rem 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     width: 100%;
-    position: fixed;
-	top: 0;
+    position: relative;
     overflow: hidden;
-	z-index: 100;
-	display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .streak-banner::before {
@@ -471,7 +469,6 @@ body {
     display: inline-block;
     font-size: 2rem;
     animation: flicker 0.8s infinite;
-	margin-right: 0.5rem;
 }
 
 @keyframes flicker {
@@ -489,13 +486,12 @@ body {
     font-size: 1.25rem;
     font-weight: 700;
     color: #0dcaf0;
-	margin-left: 0.5rem;
 }
 
 .streak-info {
     display: flex;
     align-items: center;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     justify-content: center;
 }
 
@@ -664,9 +660,4 @@ body {
         flex-direction: column;
         gap: 0.25rem;
     }
-}
-
-/* Main Content */
-main {
-    padding-top: 80px;
 }
