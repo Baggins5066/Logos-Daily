@@ -57,6 +57,17 @@
     margin-bottom: 0.5rem;
 }
 
+.flame {
+    display: inline-block;
+    font-size: 2rem;
+    animation: flicker 0.8s infinite;
+}
+
+@keyframes flicker {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.7; }
+}
+
 .current-streak {
     font-size: 1.25rem;
     font-weight: 700;
