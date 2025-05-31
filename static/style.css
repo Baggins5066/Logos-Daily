@@ -1,5 +1,10 @@
 /* Custom styles for PhiloQuote */
 
+:root {
+    --bs-primary: #ac46ff;
+    --bs-primary-rgb: 172, 70, 255;
+}
+
 /* Quote styling */
 .quote-card {
     background: #1a1a1a;
@@ -16,7 +21,7 @@
 
 .quote-icon {
     font-size: 2rem;
-    color: var(--bs-primary);
+    color: #ac46ff;
     margin-bottom: 1rem;
 }
 
@@ -290,7 +295,7 @@ body {
 }
 
 .nav-link:hover {
-    color: #0dcaf0 !important;
+    color: #ac46ff !important;
 }
 
 /* Loading states */
