@@ -65,43 +65,20 @@
                             {% endif %}
                         </div>
                         <div class="col-12 col-sm-6 d-flex justify-content-center">
-                            <button type="button" class="noteBtn" id="explainBtn" 
-                                    data-quote-id="{{ quote.id }}">
-                                <div class="IconContainer">
-                                    <i class="fas fa-lightbulb icon"></i>
-                                </div>
-                                <div class="text">Add Note</div>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- AI Explanation Section -->
-                <div id="explanationSection" class="mt-4" style="display: none;">
-                    <div class="explanation-content">
-                        <h5 class="mb-3">
-                            <i class="fas fa-brain me-2"></i>AI Explanation
-                        </h5>
-                        <div id="explanationText" class="explanation-text"></div>
-                        
-                        <!-- Chat Section -->
-                        <div class="chat-section mt-4">
-                            <h6 class="mb-3">
-                                <i class="fas fa-comments me-2"></i>Continue the Conversation
-                            </h6>
-                            <div id="chatHistory" class="chat-history mb-3"></div>
-                            <form id="chatForm" class="chat-form">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="chatInput" 
-                                           placeholder="Ask a question or share your thoughts...">
-                                    <button type="submit" class="btn btn-outline-primary">
-                                        <i class="fas fa-paper-plane"></i>
-                                    </button>
-                                </div>
+                            <form method="POST" action="{{ url_for('save_quote_and_redirect') }}" class="d-inline">
+                                <input type="hidden" name="quote_id" value="{{ quote.id }}">
+                                <button type="submit" class="noteBtn">
+                                    <div class="IconContainer">
+                                        <i class="fas fa-edit icon"></i>
+                                    </div>
+                                    <div class="text">Add Note</div>
+                                </button>
                             </form>
                         </div>
                     </div>
                 </div>
+
+                
             </div>
         </div>
     </div>
@@ -128,149 +105,4 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const explainBtn = document.getElementById('explainBtn');
-    const explanationSection = document.getElementById('explanationSection');
-    const explanationText = document.getElementById('explanationText');
-    const chatForm = document.getElementById('chatForm');
-    const chatInput = document.getElementById('chatInput');
-    const chatHistory = document.getElementById('chatHistory');
-    
-    let isExplanationVisible = false;
-    
-    if (explainBtn) {
-        explainBtn.addEventListener('click', function() {
-            if (!isExplanationVisible) {
-                const quoteId = this.dataset.quoteId;
-                getExplanation(quoteId);
-            } else {
-                toggleExplanationSection();
-            }
-        });
-    }
-    
-    if (chatForm) {
-        chatForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const message = chatInput.value.trim();
-            if (message) {
-                sendChatMessage(message);
-                chatInput.value = '';
-            }
-        });
-    }
-    
-    function getExplanation(quoteId) {
-        explainBtn.disabled = true;
-        explainBtn.innerHTML = '<div class="IconContainer"><i class="fas fa-spinner fa-spin icon"></i></div><div class="text">Loading...</div>';
-        
-        const formData = new FormData();
-        formData.append('quote_id', quoteId);
-        
-        fetch('/explain_quote', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.explanation) {
-                explanationText.innerHTML = data.explanation;
-                showExplanationSection();
-            } else {
-                alert('Error getting explanation: ' + (data.error || 'Unknown error'));
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error getting explanation');
-        })
-        .finally(() => {
-            explainBtn.disabled = false;
-            explainBtn.innerHTML = isExplanationVisible ? 
-                '<div class="IconContainer"><i class="fas fa-eye-slash icon"></i></div><div class="text">Hide Note</div>' : 
-                '<div class="IconContainer"><i class="fas fa-lightbulb icon"></i></div><div class="text">Add Note</div>';
-        });
-    }
-    
-    function sendChatMessage(message) {
-        const quoteId = explainBtn.dataset.quoteId;
-        
-        // Add user message to chat
-        addChatMessage(message, 'user');
-        
-        // Show loading
-        const loadingDiv = addChatMessage('Thinking...', 'assistant', true);
-        
-        const formData = new FormData();
-        formData.append('quote_id', quoteId);
-        formData.append('message', message);
-        
-        fetch('/chat', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Remove loading message
-            if (loadingDiv) {
-                loadingDiv.remove();
-            }
-            
-            if (data.ai_response) {
-                addChatMessage(data.ai_response, 'assistant');
-            } else {
-                addChatMessage('Error: ' + (data.error || 'Unknown error'), 'assistant');
-            }
-        })
-        .catch(error => {
-            if (loadingDiv) {
-                loadingDiv.remove();
-            }
-            console.error('Error:', error);
-            addChatMessage('Error sending message', 'assistant');
-        });
-    }
-    
-    function addChatMessage(message, sender, isLoading = false) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `chat-message ${sender}-message mb-2`;
-        
-        const icon = sender === 'user' ? 'fas fa-user' : 'fas fa-robot';
-        const bgClass = sender === 'user' ? 'bg-primary' : 'bg-secondary';
-        
-        messageDiv.innerHTML = `
-            <div class="d-flex ${sender === 'user' ? 'justify-content-end' : ''}">
-                <div class="message-bubble ${bgClass} text-white p-2 rounded" style="max-width: 80%;">
-                    <i class="${icon} me-1"></i>
-                    ${message}
-                </div>
-            </div>
-        `;
-        
-        chatHistory.appendChild(messageDiv);
-        chatHistory.scrollTop = chatHistory.scrollHeight;
-        
-        return isLoading ? messageDiv : null;
-    }
-    
-    function showExplanationSection() {
-        explanationSection.style.display = 'block';
-        isExplanationVisible = true;
-        explainBtn.innerHTML = '<div class="IconContainer"><i class="fas fa-eye-slash icon"></i></div><div class="text">Hide Note</div>';
-    }
-    
-    function toggleExplanationSection() {
-        if (isExplanationVisible) {
-            explanationSection.style.display = 'none';
-            isExplanationVisible = false;
-            explainBtn.innerHTML = '<div class="IconContainer"><i class="fas fa-lightbulb icon"></i></div><div class="text">Add Note</div>';
-        } else {
-            explanationSection.style.display = 'block';
-            isExplanationVisible = true;
-            explainBtn.innerHTML = '<div class="IconContainer"><i class="fas fa-eye-slash icon"></i></div><div class="text">Hide Note</div>';
-        }
-    }
-});
-</script>
 {% endblock %}

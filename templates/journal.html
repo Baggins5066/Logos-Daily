@@ -17,7 +17,7 @@
 
             {% if entries %}
                 {% for entry in entries %}
-                <div class="journal-entry-card mb-4">
+                <div class="journal-entry-card mb-4" data-entry-id="{{ entry.id }}">
                     <div class="card">
                         <div class="card-body">
                             <!-- Quote Section -->
@@ -126,7 +126,7 @@ function confirmDelete(entryId) {
     modal.show();
 }
 
-// Auto-resize textareas
+// Auto-resize textareas and handle focus
 document.addEventListener('DOMContentLoaded', function() {
     const textareas = document.querySelectorAll('textarea');
     textareas.forEach(textarea => {
@@ -140,6 +140,22 @@ document.addEventListener('DOMContentLoaded', function() {
         textarea.style.height = 'auto';
         textarea.style.height = textarea.scrollHeight + 'px';
     });
+    
+    // Focus on specific entry if requested
+    {% if focus_entry_id %}
+    const focusEntry = document.querySelector('[data-entry-id="{{ focus_entry_id }}"]');
+    if (focusEntry) {
+        const textarea = focusEntry.querySelector('textarea');
+        if (textarea) {
+            // Scroll to the entry and focus the textarea
+            focusEntry.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => {
+                textarea.focus();
+                textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+            }, 500);
+        }
+    }
+    {% endif %}
 });
 </script>
 {% endblock %}

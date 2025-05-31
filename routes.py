@@ -70,17 +70,51 @@ def save_quote():
     
     return redirect(url_for('index'))
 
+@app.route('/save_quote_and_redirect', methods=['POST'])
+def save_quote_and_redirect():
+    """Save the daily quote to user's journal and redirect to journal with focus"""
+    quote_id = request.form.get('quote_id')
+    if not quote_id:
+        flash('No quote specified', 'error')
+        return redirect(url_for('index'))
+    
+    session_id = get_session_id()
+    
+    # Check if already saved
+    existing_entry = JournalEntry.query.filter_by(
+        quote_id=quote_id,
+        user_session_id=session_id
+    ).first()
+    
+    if not existing_entry:
+        # Create new journal entry
+        journal_entry = JournalEntry(
+            quote_id=quote_id,
+            user_session_id=session_id,
+            user_notes=""
+        )
+        db.session.add(journal_entry)
+        db.session.commit()
+        flash('Quote saved to your journal!', 'success')
+        entry_id = journal_entry.id
+    else:
+        entry_id = existing_entry.id
+    
+    # Redirect to journal with focus parameter
+    return redirect(url_for('journal', focus_entry=entry_id))
+
 @app.route('/journal')
 def journal():
     """Display user's journal with saved quotes"""
     session_id = get_session_id()
+    focus_entry_id = request.args.get('focus_entry')
     
     # Get all journal entries for this user
     entries = JournalEntry.query.filter_by(user_session_id=session_id)\
                               .order_by(JournalEntry.created_at.desc())\
                               .all()
     
-    return render_template('journal.html', entries=entries)
+    return render_template('journal.html', entries=entries, focus_entry_id=focus_entry_id)
 
 @app.route('/update_notes', methods=['POST'])
 def update_notes():
