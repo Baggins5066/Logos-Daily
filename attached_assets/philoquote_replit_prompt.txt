@@ -1,0 +1,74 @@
+Goal:
+Build a full-stack app that shows a new philosophical quote each day, allows users to save it to a journal, write reflections, ask an AI for an explanation of the quote, and engage further via a chatbot. Include a streak system to track daily use.
+
+FEATURES TO INCLUDE
+
+1. Daily Random Quote
+- On the homepage (/), show one random quote each day.
+- Quotes come from a database (SQLite).
+- The same quote should persist for a given day (deterministic per date or stored in user session).
+- Each quote includes:
+  - text (string)
+  - author (string)
+  - Optional: category (e.g., Stoicism, Existentialism)
+
+2. Quote Database
+- Use SQLite for storage.
+- Create a quotes table with fields:
+  - id (INTEGER, PRIMARY KEY)
+  - text (TEXT)
+  - author (TEXT)
+  - tags (TEXT, optional)
+
+- Allow admin upload/import of quotes via .csv or .json.
+- Add an /admin/upload route (basic auth protected) to import a quote file.
+
+3. Journal System
+- Users can click a button to save the quote to their journal.
+- For each saved quote, user can write personal reflections/notes.
+- Journal entries stored in a journal_entries table:
+  - id (INTEGER, PRIMARY KEY)
+  - quote_id (FOREIGN KEY → quotes.id)
+  - user_notes (TEXT)
+  - created_at (DATETIME)
+
+- Display journal in a /journal route:
+  - Show saved quotes and notes
+  - Allow editing notes
+  - Allow deleting journal entries
+
+4. AI Explanation (ChatGPT API Integration)
+- Add a button on the quote card: “Explain this quote”.
+- On click, call OpenAI API (e.g., GPT-4) with a prompt:
+  "Explain this philosophical quote in simple terms: [quote text] — [author]"
+- Display the explanation below the quote.
+- Let user continue chatting (embed a simple chat window).
+  - Store conversation in session memory.
+
+5. Streak Tracking System
+- Track user visits or quote interactions per day.
+- Save streak metadata:
+  - last_seen_date
+  - current_streak
+  - highest_streak
+
+- Display streak visually on homepage (e.g., flame icon 🔥 + number).
+- Reset streak if user misses a day.
+
+6. User Experience
+- Basic local user session (no login required initially).
+- User must login to save their data.
+- Store journal entries locally (or use anonymous session tokens).
+- Responsive UI:
+  - Show quote, save button, AI explanation, journal button
+- Simple and minimalist design, centered around the quote.
+
+Stack & Tools
+- Backend: Python 3 + Flask
+- Database: SQLite
+- Frontend: HTML, Bootstrap (or simple CSS), JavaScript (for AI call/chat)
+- AI: OpenAI API (GPT-4o recommended)
+
+Extra Notes
+- Modularize OpenAI API logic (e.g., explanation + chatbot).
+- Use Flask sessions to track user streaks without login.
