@@ -448,6 +448,7 @@ body {
     position: relative;
     overflow: hidden;
     margin-left: calc(-50vw + 50%);
+    margin-top: -2rem;
 }
 
 .streak-banner::before {
