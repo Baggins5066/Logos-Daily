@@ -415,3 +415,145 @@ body {
     opacity: 0.6;
     cursor: not-allowed;
 }
+
+/* Animated save button - same style as bookmark button */
+.saveBtn {
+    width: 180px;
+    height: 40px;
+    border-radius: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.349);
+    background-color: rgb(12, 12, 12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition-duration: 0.3s;
+    overflow: hidden;
+    position: relative;
+}
+
+.saveBtn .IconContainer {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(to bottom, rgb(40, 167, 69), rgb(25, 135, 84));
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 2;
+    transition-duration: 0.3s;
+}
+
+.saveBtn .icon {
+    border-radius: 1px;
+    color: white;
+    font-size: 16px;
+}
+
+.saveBtn .text {
+    height: 100%;
+    width: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 1;
+    transition-duration: 0.3s;
+    font-size: 1.04em;
+    font-weight: 500;
+    margin: 0;
+}
+
+.saveBtn:hover .IconContainer {
+    width: 170px;
+    transition-duration: 0.3s;
+}
+
+.saveBtn:hover .text {
+    transform: translate(10px);
+    width: 0;
+    font-size: 0;
+    transition-duration: 0.3s;
+}
+
+.saveBtn:active {
+    transform: scale(0.95);
+    transition-duration: 0.3s;
+}
+
+.saveBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Animated delete button - same style as bookmark button */
+.deleteBtn {
+    width: 180px;
+    height: 40px;
+    border-radius: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.349);
+    background-color: rgb(12, 12, 12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition-duration: 0.3s;
+    overflow: hidden;
+    position: relative;
+}
+
+.deleteBtn .IconContainer {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(to bottom, rgb(220, 53, 69), rgb(187, 35, 51));
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 2;
+    transition-duration: 0.3s;
+}
+
+.deleteBtn .icon {
+    border-radius: 1px;
+    color: white;
+    font-size: 16px;
+}
+
+.deleteBtn .text {
+    height: 100%;
+    width: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 1;
+    transition-duration: 0.3s;
+    font-size: 1.04em;
+    font-weight: 500;
+    margin: 0;
+}
+
+.deleteBtn:hover .IconContainer {
+    width: 170px;
+    transition-duration: 0.3s;
+}
+
+.deleteBtn:hover .text {
+    transform: translate(10px);
+    width: 0;
+    font-size: 0;
+    transition-duration: 0.3s;
+}
+
+.deleteBtn:active {
+    transform: scale(0.95);
+    transition-duration: 0.3s;
+}
+
+.deleteBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

@@ -59,13 +59,19 @@
                                             Last updated: {{ entry.updated_at.strftime('%B %d, %Y') }}
                                             {% endif %}
                                         </small>
-                                        <div>
-                                            <button type="submit" class="btn btn-primary btn-sm me-2">
-                                                <i class="fas fa-save me-1"></i>Save Notes
+                                        <div class="d-flex gap-2">
+                                            <button type="submit" class="saveBtn">
+                                                <div class="IconContainer">
+                                                    <i class="fas fa-save icon"></i>
+                                                </div>
+                                                <p class="text">Save Notes</p>
                                             </button>
-                                            <button type="button" class="btn btn-danger btn-sm" 
+                                            <button type="button" class="deleteBtn" 
                                                     onclick="confirmDelete({{ entry.id }})">
-                                                <i class="fas fa-trash me-1"></i>Delete Entry
+                                                <div class="IconContainer">
+                                                    <i class="fas fa-trash icon"></i>
+                                                </div>
+                                                <p class="text">Delete Entry</p>
                                             </button>
                                         </div>
                                     </div>
