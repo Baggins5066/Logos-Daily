@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel - PhiloQuote{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="mb-4">
+                <i class="fas fa-cog me-2"></i>Admin Panel
+            </h1>
+
+            <!-- Statistics -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-quote-left fa-2x text-primary mb-2"></i>
+                            <h3 class="mb-1">{{ total_quotes }}</h3>
+                            <p class="text-muted mb-0">Total Quotes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-journal-whills fa-2x text-success mb-2"></i>
+                            <h3 class="mb-1">{{ total_entries }}</h3>
+                            <p class="text-muted mb-0">Journal Entries</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-upload me-2"></i>Upload Quotes
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-3">
+                        Upload philosophical quotes from CSV or JSON files. 
+                        Existing quotes (same text and author) will be skipped.
+                    </p>
+
+                    <form method="POST" action="{{ url_for('admin_upload') }}" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Choose File</label>
+                            <input type="file" class="form-control" id="file" name="file" 
+                                   accept=".csv,.json" required>
+                            <div class="form-text">
+                                Accepted formats: CSV, JSON (max 10MB)
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload me-1"></i>Upload Quotes
+                        </button>
+                    </form>
+
+                    <!-- Format Examples -->
+                    <div class="mt-4">
+                        <h6>File Format Examples:</h6>
+                        
+                        <div class="accordion" id="formatAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" 
+                                            data-bs-toggle="collapse" data-bs-target="#csvFormat">
+                                        CSV Format
+                                    </button>
+                                </h2>
+                                <div id="csvFormat" class="accordion-collapse collapse" 
+                                     data-bs-parent="#formatAccordion">
+                                    <div class="accordion-body">
+                                        <p>CSV file should have columns: <code>text, author, tags</code></p>
+                                        <pre class="bg-dark p-2 rounded"><code>text,author,tags
+"The unexamined life is not worth living.",Socrates,"Ancient Philosophy, Self-Knowledge"
+"I think, therefore I am.",René Descartes,"Rationalism, Existence"</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" 
+                                            data-bs-toggle="collapse" data-bs-target="#jsonFormat">
+                                        JSON Format
+                                    </button>
+                                </h2>
+                                <div id="jsonFormat" class="accordion-collapse collapse" 
+                                     data-bs-parent="#formatAccordion">
+                                    <div class="accordion-body">
+                                        <p>JSON file should be an array of quote objects:</p>
+                                        <pre class="bg-dark p-2 rounded"><code>[
+  {
+    "text": "The unexamined life is not worth living.",
+    "author": "Socrates",
+    "tags": "Ancient Philosophy, Self-Knowledge"
+  },
+  {
+    "text": "I think, therefore I am.",
+    "author": "René Descartes",
+    "tags": "Rationalism, Existence"
+  }
+]</code></pre>
+                                        <p class="mt-2">Alternative format with quotes key:</p>
+                                        <pre class="bg-dark p-2 rounded"><code>{
+  "quotes": [
+    {
+      "text": "Quote text here",
+      "author": "Author name",
+      "tags": "Optional tags"
+    }
+  ]
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="mt-4 text-center">
+                <a href="{{ url_for('index') }}" class="btn btn-outline-primary me-2">
+                    <i class="fas fa-home me-1"></i>Back to Home
+                </a>
+                <a href="{{ url_for('admin_logout') }}" class="btn btn-outline-danger">
+                    <i class="fas fa-sign-out-alt me-1"></i>Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
