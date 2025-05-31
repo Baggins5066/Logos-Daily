@@ -58,47 +58,14 @@
 }
 
 .flame {
-    position: relative;
-    width: 50px;
-    height: 100px;
-    background: radial-gradient(circle, #ff4500 0%, #ff6347 50%, transparent 100%);
-    border-radius: 50%;
-    animation: flicker 1.5s infinite ease-in-out;
     display: inline-block;
-    margin: 0 auto;
-}
-
-.flame-inner {
-    position: absolute;
-    top: 20%;
-    left: 25%;
-    width: 50%;
-    height: 60%;
-    background: radial-gradient(circle, #ffd700 0%, #ffa500 50%, transparent 100%);
-    border-radius: 50%;
-    animation: flicker-inner 1.5s infinite ease-in-out;
+    font-size: 2rem;
+    animation: flicker 0.8s infinite;
 }
 
 @keyframes flicker {
-    0%, 100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.1);
-        opacity: 0.8;
-    }
-}
-
-@keyframes flicker-inner {
-    0%, 100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.2);
-        opacity: 0.7;
-    }
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.7; }
 }
 
 .current-streak {
