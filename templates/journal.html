@@ -40,12 +40,24 @@
 
                             <!-- Notes Section -->
                             <div class="notes-section">
-                                <h6 class="mb-3">
-                                    <i class="fas fa-edit me-1"></i>My Reflections
-                                </h6>
+                                <!-- Show existing notes if they exist -->
+                                {% if entry.user_notes and entry.user_notes.strip() %}
+                                <div class="existing-notes mb-3">
+                                    <h6 class="mb-2">
+                                        <i class="fas fa-edit me-1"></i>My Reflections
+                                    </h6>
+                                    <div class="notes-display p-3 bg-dark border rounded">
+                                        {{ entry.user_notes }}
+                                    </div>
+                                </div>
+                                {% endif %}
                                 
-                                <form method="POST" action="{{ url_for('update_notes') }}">
+                                <!-- Notes form (hidden by default) -->
+                                <form method="POST" action="{{ url_for('update_notes') }}" class="notes-form" style="display: none;">
                                     <input type="hidden" name="entry_id" value="{{ entry.id }}">
+                                    <h6 class="mb-3">
+                                        <i class="fas fa-edit me-1"></i>My Reflections
+                                    </h6>
                                     <div class="mb-3">
                                         <textarea class="form-control" name="notes" rows="4" 
                                                 placeholder="Write your thoughts, reflections, or insights about this quote...">{{ entry.user_notes or '' }}</textarea>
@@ -66,16 +78,42 @@
                                                 </div>
                                                 <p class="text">Save thoughts</p>
                                             </button>
-                                            <button type="button" class="deleteBtn" 
-                                                    onclick="confirmDelete({{ entry.id }})">
+                                            <button type="button" class="cancelBtn" onclick="hideNotesForm({{ entry.id }})">
                                                 <div class="IconContainer">
-                                                    <i class="fas fa-trash icon"></i>
+                                                    <i class="fas fa-times icon"></i>
                                                 </div>
-                                                <p class="text">Delete quote</p>
+                                                <p class="text">Cancel</p>
                                             </button>
                                         </div>
                                     </div>
                                 </form>
+                                
+                                <!-- Action buttons -->
+                                <div class="notes-actions d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar me-1"></i>
+                                        Saved on {{ entry.created_at.strftime('%B %d, %Y') }}
+                                        {% if entry.updated_at.date() != entry.created_at.date() %}
+                                        <br><i class="fas fa-edit me-1"></i>
+                                        Last updated: {{ entry.updated_at.strftime('%B %d, %Y') }}
+                                        {% endif %}
+                                    </small>
+                                    <div class="d-flex flex-column gap-2">
+                                        <button type="button" class="noteBtn" onclick="showNotesForm({{ entry.id }})">
+                                            <div class="IconContainer">
+                                                <i class="fas fa-edit icon"></i>
+                                            </div>
+                                            <div class="text">{% if entry.user_notes and entry.user_notes.strip() %}Edit thoughts{% else %}Add thoughts{% endif %}</div>
+                                        </button>
+                                        <button type="button" class="deleteBtn" 
+                                                onclick="confirmDelete({{ entry.id }})">
+                                            <div class="IconContainer">
+                                                <i class="fas fa-trash icon"></i>
+                                            </div>
+                                            <p class="text">Delete quote</p>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -132,6 +170,48 @@ function confirmDelete(entryId) {
     modal.show();
 }
 
+function showNotesForm(entryId) {
+    const entryCard = document.querySelector(`[data-entry-id="${entryId}"]`);
+    const notesForm = entryCard.querySelector('.notes-form');
+    const notesActions = entryCard.querySelector('.notes-actions');
+    const existingNotes = entryCard.querySelector('.existing-notes');
+    
+    // Hide the action buttons and existing notes display
+    notesActions.style.display = 'none';
+    if (existingNotes) {
+        existingNotes.style.display = 'none';
+    }
+    
+    // Show the form
+    notesForm.style.display = 'block';
+    
+    // Focus the textarea
+    const textarea = notesForm.querySelector('textarea');
+    setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+        // Trigger auto-resize
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    }, 100);
+}
+
+function hideNotesForm(entryId) {
+    const entryCard = document.querySelector(`[data-entry-id="${entryId}"]`);
+    const notesForm = entryCard.querySelector('.notes-form');
+    const notesActions = entryCard.querySelector('.notes-actions');
+    const existingNotes = entryCard.querySelector('.existing-notes');
+    
+    // Hide the form
+    notesForm.style.display = 'none';
+    
+    // Show the action buttons and existing notes display
+    notesActions.style.display = 'flex';
+    if (existingNotes) {
+        existingNotes.style.display = 'block';
+    }
+}
+
 // Auto-resize textareas and handle focus
 document.addEventListener('DOMContentLoaded', function() {
     const textareas = document.querySelectorAll('textarea');
@@ -151,15 +231,11 @@ document.addEventListener('DOMContentLoaded', function() {
     {% if focus_entry_id %}
     const focusEntry = document.querySelector('[data-entry-id="{{ focus_entry_id }}"]');
     if (focusEntry) {
-        const textarea = focusEntry.querySelector('textarea');
-        if (textarea) {
-            // Scroll to the entry and focus the textarea
-            focusEntry.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            setTimeout(() => {
-                textarea.focus();
-                textarea.setSelectionRange(textarea.value.length, textarea.value.length);
-            }, 500);
-        }
+        // Scroll to the entry and automatically show the notes form
+        focusEntry.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => {
+            showNotesForm({{ focus_entry_id }});
+        }, 500);
     }
     {% endif %}
 });
