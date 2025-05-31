@@ -186,7 +186,7 @@
 
 /* Animated bookmark button from Uiverse.io by vinodjangid07 */
 .bookmarkBtn {
-    width: 160px;
+    width: 180px;
     height: 40px;
     border-radius: 40px;
     border: 1px solid rgba(255, 255, 255, 0.349);
@@ -221,7 +221,7 @@
 
 .text {
     height: 100%;
-    width: 120px;
+    width: 140px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -233,7 +233,7 @@
 }
 
 .bookmarkBtn:hover .IconContainer {
-    width: 150px;
+    width: 170px;
     transition-duration: 0.3s;
 }
 
