@@ -99,18 +99,13 @@
                                         {% endif %}
                                     </small>
                                     <div class="d-flex flex-column gap-2">
-                                        <button type="button" class="noteBtn" onclick="showNotesForm({{ entry.id }})">
-                                            <div class="IconContainer">
-                                                <i class="fas fa-edit icon"></i>
-                                            </div>
-                                            <div class="text">{% if entry.user_notes and entry.user_notes.strip() %}Edit thoughts{% else %}Add thoughts{% endif %}</div>
+                                        <button type="button" class="noteBtn" onclick="showNotesForm({{ entry.id }})" 
+                                                title="{% if entry.user_notes and entry.user_notes.strip() %}Edit thoughts{% else %}Add thoughts{% endif %}">
+                                            <i class="fas fa-edit icon"></i>
                                         </button>
                                         <button type="button" class="deleteBtn" 
-                                                onclick="confirmDelete({{ entry.id }})">
-                                            <div class="IconContainer">
-                                                <i class="fas fa-trash icon"></i>
-                                            </div>
-                                            <p class="text">Delete quote</p>
+                                                onclick="confirmDelete({{ entry.id }})" title="Delete quote">
+                                            <i class="fas fa-trash icon"></i>
                                         </button>
                                     </div>
                                 </div>

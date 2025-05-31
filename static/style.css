@@ -424,69 +424,41 @@ body {
     transition: box-shadow 0.2s ease-in;
 }
 
-/* Animated note button - same style as bookmark button */
+/* Circular note button */
 .noteBtn {
-    width: 180px;
-    height: 40px;
-    border-radius: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.349);
-    background-color: rgb(12, 12, 12);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 193, 7, 0.5);
+    background: linear-gradient(to bottom, rgb(255, 193, 7), rgb(255, 152, 0));
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition-duration: 0.3s;
-    overflow: hidden;
-    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
 }
 
 .noteBtn .IconContainer {
-    width: 30px;
-    height: 30px;
-    background: linear-gradient(to bottom, rgb(255, 193, 7), rgb(255, 152, 0));
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    z-index: 2;
-    transition-duration: 0.3s;
+    display: none;
 }
 
 .noteBtn .icon {
-    border-radius: 1px;
     color: white;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .noteBtn .text {
-    height: 100%;
-    width: 140px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    z-index: 1;
-    transition-duration: 0.3s;
-    font-size: 1.04em;
-    font-weight: 500;
+    display: none;
 }
 
-.noteBtn:hover .IconContainer {
-    width: 170px;
-    transition-duration: 0.3s;
-}
-
-.noteBtn:hover .text {
-    transform: translate(10px);
-    width: 0;
-    font-size: 0;
-    transition-duration: 0.3s;
+.noteBtn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 16px rgba(255, 193, 7, 0.5);
 }
 
 .noteBtn:active {
     transform: scale(0.95);
-    transition-duration: 0.3s;
 }
 
 .noteBtn:disabled {
@@ -565,70 +537,41 @@ body {
     cursor: not-allowed;
 }
 
-/* Animated delete button - same style as bookmark button */
+/* Circular delete button */
 .deleteBtn {
-    width: 180px;
-    height: 40px;
-    border-radius: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.349);
-    background-color: rgb(12, 12, 12);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 1px solid rgba(220, 53, 69, 0.5);
+    background: linear-gradient(to bottom, rgb(220, 53, 69), rgb(187, 35, 51));
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition-duration: 0.3s;
-    overflow: hidden;
-    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
 }
 
 .deleteBtn .IconContainer {
-    width: 30px;
-    height: 30px;
-    background: linear-gradient(to bottom, rgb(220, 53, 69), rgb(187, 35, 51));
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    z-index: 2;
-    transition-duration: 0.3s;
+    display: none;
 }
 
 .deleteBtn .icon {
-    border-radius: 1px;
     color: white;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .deleteBtn .text {
-    height: 100%;
-    width: 140px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    z-index: 1;
-    transition-duration: 0.3s;
-    font-size: 1.04em;
-    font-weight: 500;
-    margin: 0;
+    display: none;
 }
 
-.deleteBtn:hover .IconContainer {
-    width: 170px;
-    transition-duration: 0.3s;
-}
-
-.deleteBtn:hover .text {
-    transform: translate(10px);
-    width: 0;
-    font-size: 0;
-    transition-duration: 0.3s;
+.deleteBtn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 16px rgba(220, 53, 69, 0.5);
 }
 
 .deleteBtn:active {
     transform: scale(0.95);
-    transition-duration: 0.3s;
 }
 
 .deleteBtn:disabled {
