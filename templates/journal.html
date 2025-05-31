@@ -53,10 +53,10 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <small class="text-muted">
                                             <i class="fas fa-calendar me-1"></i>
-                                            Saved on {{ entry.created_at.strftime('%B %d, %Y at %I:%M %p') }}
-                                            {% if entry.updated_at != entry.created_at %}
+                                            Saved on {{ entry.created_at.strftime('%B %d, %Y') }}
+                                            {% if entry.updated_at.date() != entry.created_at.date() %}
                                             <br><i class="fas fa-edit me-1"></i>
-                                            Last updated: {{ entry.updated_at.strftime('%B %d, %Y at %I:%M %p') }}
+                                            Last updated: {{ entry.updated_at.strftime('%B %d, %Y') }}
                                             {% endif %}
                                         </small>
                                         <div>
