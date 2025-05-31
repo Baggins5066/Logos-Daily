@@ -98,7 +98,7 @@
                                         Last updated: {{ entry.updated_at.strftime('%B %d, %Y') }}
                                         {% endif %}
                                     </small>
-                                    <div class="d-flex flex-column gap-2">
+                                    <div class="d-flex gap-2">
                                         <button type="button" class="noteBtn" onclick="showNotesForm({{ entry.id }})" 
                                                 title="{% if entry.user_notes and entry.user_notes.strip() %}Edit thoughts{% else %}Add thoughts{% endif %}">
                                             <i class="fas fa-edit icon"></i>
