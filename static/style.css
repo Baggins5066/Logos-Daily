@@ -485,9 +485,9 @@ body {
 }
 
 .current-streak {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    color: #0dcaf0;
+    color: #ff6b35;
 }
 
 .streak-info {
