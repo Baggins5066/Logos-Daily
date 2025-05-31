@@ -184,6 +184,81 @@
     transform: translateY(-1px);
 }
 
+/* Animated bookmark button from Uiverse.io by vinodjangid07 */
+.bookmarkBtn {
+    width: 160px;
+    height: 40px;
+    border-radius: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.349);
+    background-color: rgb(12, 12, 12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition-duration: 0.3s;
+    overflow: hidden;
+    position: relative;
+}
+
+.IconContainer {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(to bottom, rgb(255, 136, 255), rgb(172, 70, 255));
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 2;
+    transition-duration: 0.3s;
+}
+
+.icon {
+    border-radius: 1px;
+    color: white;
+    font-size: 16px;
+}
+
+.text {
+    height: 100%;
+    width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 1;
+    transition-duration: 0.3s;
+    font-size: 1.04em;
+    font-weight: 500;
+}
+
+.bookmarkBtn:hover .IconContainer {
+    width: 150px;
+    transition-duration: 0.3s;
+}
+
+.bookmarkBtn:hover .text {
+    transform: translate(10px);
+    width: 0;
+    font-size: 0;
+    transition-duration: 0.3s;
+}
+
+.bookmarkBtn:active {
+    transform: scale(0.95);
+    transition-duration: 0.3s;
+}
+
+/* Saved state for bookmark button */
+.bookmarkBtn.saved {
+    background-color: rgb(16, 64, 16);
+    border-color: rgba(144, 238, 144, 0.5);
+}
+
+.bookmarkBtn.saved .IconContainer {
+    background: linear-gradient(to bottom, rgb(144, 238, 144), rgb(34, 139, 34));
+}
+
 /* High contrast text */
 body {
     color: #ffffff !important;
