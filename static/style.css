@@ -355,29 +355,14 @@ button:active,
 
 .saveBtn,
 .cancelBtn {
-    width: 180px;
     height: 40px;
     border-radius: 40px;
-    padding: 0;
+    padding: 0 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-}
-
-.saveBtn .IconContainer,
-.saveBtn .text,
-.cancelBtn .IconContainer,
-.cancelBtn .text {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.saveBtn .icon,
-.cancelBtn .icon {
-    font-size: 14px;
-    line-height: 1;
+    white-space: nowrap;
+    min-width: fit-content;
 }
 
 /* Special States */
