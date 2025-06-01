@@ -107,8 +107,15 @@ body {
 /* ========================================
    BUTTON STYLES
    ======================================== */
-/* Common Button Properties */
-.btn {
+/* Universal Button Base Style */
+.btn,
+button,
+.bookmarkBtn,
+.noteBtn,
+.deleteBtn,
+.saveBtn,
+.cancelBtn,
+.accordion-button {
     position: relative;
     padding: 10px 20px;
     border-radius: 7px;
@@ -118,28 +125,55 @@ body {
     font-weight: 600;
     letter-spacing: 2px;
     background: transparent;
-    color: #fff !important;
+    color: #fff;
     overflow: hidden;
     box-shadow: 0 0 0 0 transparent;
+    -webkit-transition: all 0.2s ease-in;
+    -moz-transition: all 0.2s ease-in;
     transition: all 0.2s ease-in;
     text-decoration: none;
     display: inline-block;
+    cursor: pointer;
 }
 
-.btn:hover {
+.btn:hover,
+button:hover,
+.bookmarkBtn:hover,
+.noteBtn:hover,
+.deleteBtn:hover,
+.saveBtn:hover,
+.cancelBtn:hover,
+.accordion-button:hover {
     background: rgb(61, 106, 255);
     box-shadow: 0 0 30px 5px rgba(0, 142, 236, 0.815);
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
     transition: all 0.2s ease-out;
-    color: #fff !important;
+    color: #fff;
     text-decoration: none;
-    transform: none;
 }
 
-.btn:hover::before {
+.btn:hover::before,
+button:hover::before,
+.bookmarkBtn:hover::before,
+.noteBtn:hover::before,
+.deleteBtn:hover::before,
+.saveBtn:hover::before,
+.cancelBtn:hover::before,
+.accordion-button:hover::before {
+    -webkit-animation: sh02 0.5s 0s linear;
+    -moz-animation: sh02 0.5s 0s linear;
     animation: sh02 0.5s 0s linear;
 }
 
-.btn::before {
+.btn::before,
+button::before,
+.bookmarkBtn::before,
+.noteBtn::before,
+.deleteBtn::before,
+.saveBtn::before,
+.cancelBtn::before,
+.accordion-button::before {
     content: '';
     display: block;
     width: 0px;
@@ -150,15 +184,28 @@ body {
     opacity: 0;
     background: #fff;
     box-shadow: 0 0 50px 30px #fff;
+    -webkit-transform: skewX(-20deg);
+    -moz-transform: skewX(-20deg);
+    -ms-transform: skewX(-20deg);
+    -o-transform: skewX(-20deg);
     transform: skewX(-20deg);
 }
 
-.btn:active {
+.btn:active,
+button:active,
+.bookmarkBtn:active,
+.noteBtn:active,
+.deleteBtn:active,
+.saveBtn:active,
+.cancelBtn:active,
+.accordion-button:active {
     box-shadow: 0 0 0 0 transparent;
+    -webkit-transition: box-shadow 0.2s ease-in;
+    -moz-transition: box-shadow 0.2s ease-in;
     transition: box-shadow 0.2s ease-in;
 }
 
-/* Primary Button Variant */
+/* Button Color Variants */
 .btn-primary {
     border-color: rgb(172, 70, 255);
 }
@@ -168,50 +215,52 @@ body {
     box-shadow: 0 0 30px 5px rgba(172, 70, 255, 0.815);
 }
 
-/* Secondary Button Variant */
-.btn-secondary {
+.btn-secondary,
+.cancelBtn {
     border-color: rgb(108, 117, 125);
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover,
+.cancelBtn:hover {
     background: rgb(108, 117, 125);
     box-shadow: 0 0 30px 5px rgba(108, 117, 125, 0.815);
 }
 
-/* Danger Button Variant */
-.btn-danger {
+.btn-danger,
+.deleteBtn {
     border-color: rgb(220, 53, 69);
 }
 
-.btn-danger:hover {
+.btn-danger:hover,
+.deleteBtn:hover {
     background: rgb(220, 53, 69);
     box-shadow: 0 0 30px 5px rgba(220, 53, 69, 0.815);
 }
 
-/* Success Button Variant */
-.btn-success {
+.btn-success,
+.saveBtn {
     border-color: rgb(40, 167, 69);
 }
 
-.btn-success:hover {
+.btn-success:hover,
+.saveBtn:hover {
     background: rgb(40, 167, 69);
     box-shadow: 0 0 30px 5px rgba(40, 167, 69, 0.815);
 }
 
-/* Outline Button Variants */
-.btn-outline-primary {
+.btn-outline-primary,
+.bookmarkBtn {
     border-color: rgb(172, 70, 255);
-    background: transparent;
 }
 
-.btn-outline-primary:hover {
+.btn-outline-primary:hover,
+.bookmarkBtn:hover {
     background: rgb(172, 70, 255);
     box-shadow: 0 0 30px 5px rgba(172, 70, 255, 0.815);
 }
 
 .btn-outline-danger {
     border-color: rgb(220, 53, 69);
-    background: transparent;
 }
 
 .btn-outline-danger:hover {
@@ -219,302 +268,82 @@ body {
     box-shadow: 0 0 30px 5px rgba(220, 53, 69, 0.815);
 }
 
-/* Save to Journal */
+.noteBtn {
+    border-color: rgb(255, 193, 7);
+}
+
+.noteBtn:hover {
+    background: rgb(255, 193, 7);
+    box-shadow: 0 0 30px 5px rgba(255, 193, 7, 0.815);
+}
+
+/* Special button sizes */
 .bookmarkBtn {
     width: 185px;
     height: 45px;
     border-radius: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.349);
-    background-color: rgb(12, 12, 12);
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition-duration: 0.3s;
-    overflow: hidden;
-    position: relative;
 }
 
-.bookmarkBtn .IconContainer {
-    width: 34px;
-    height: 34px;
-    background: linear-gradient(to bottom, rgb(255, 136, 255), rgb(172, 70, 255));
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    z-index: 2;
-    transition-duration: 0.3s;
-}
-
-.bookmarkBtn .icon {
-    border-radius: 1px;
-    color: white;
-    font-size: 16px;
-}
-
-.bookmarkBtn .text {
-    height: 100%;
-    width: 140px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    z-index: 1;
-    transition-duration: 0.3s;
-    font-size: 1.04em;
-    font-weight: 500;
-}
-
-.bookmarkBtn:hover .IconContainer {
-    width: 170px;
-    transition-duration: 0.3s;
-}
-
-.bookmarkBtn:hover .text {
-    transform: translate(10px);
-    width: 0;
-    font-size: 0;
-    transition-duration: 0.3s;
-}
-
-.bookmarkBtn:active {
-    transform: scale(0.95);
-    transition-duration: 0.3s;
-}
-
-/* Saved State for Bookmark Button */
-.bookmarkBtn.saved {
-    background-color: rgb(16, 64, 16);
-    border-color: rgba(144, 238, 144, 0.5);
-}
-
-.bookmarkBtn.saved .IconContainer {
-    background: linear-gradient(to bottom, rgb(144, 238, 144), rgb(34, 139, 34));
-}
-
-/* Circular Note Button */
-.noteBtn {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 193, 7, 0.5);
-    background: linear-gradient(to bottom, rgb(255, 193, 7), rgb(255, 152, 0));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
-}
-
-.noteBtn .icon {
-    color: white;
-    font-size: 18px;
-}
-
-.noteBtn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 16px rgba(255, 193, 7, 0.5);
-}
-
-.noteBtn:active {
-    transform: scale(0.95);
-}
-
-/* Circular Delete Button */
+.noteBtn,
 .deleteBtn {
     width: 45px;
     height: 45px;
     border-radius: 50%;
-    border: 1px solid rgba(220, 53, 69, 0.5);
-    background: linear-gradient(to bottom, rgb(220, 53, 69), rgb(187, 35, 51));
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
 }
 
-.deleteBtn .icon {
-    color: white;
-    font-size: 18px;
-}
-
-.deleteBtn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 16px rgba(220, 53, 69, 0.5);
-}
-
-.deleteBtn:active {
-    transform: scale(0.95);
-}
-
-/* Save Button */
-.saveBtn {
-    width: 180px;
-    height: 40px;
-    border-radius: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.349);
-    background-color: rgb(12, 12, 12);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition-duration: 0.3s;
-    overflow: hidden;
-    position: relative;
-}
-
-.saveBtn .IconContainer {
-    width: 30px;
-    height: 30px;
-    background: linear-gradient(to bottom, rgb(40, 167, 69), rgb(25, 135, 84));
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    z-index: 2;
-    transition-duration: 0.3s;
-}
-
-.saveBtn .icon {
-    border-radius: 1px;
-    color: white;
-    font-size: 16px;
-}
-
-.saveBtn .text {
-    height: 100%;
-    width: 140px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    z-index: 1;
-    transition-duration: 0.3s;
-    font-size: 1.04em;
-    font-weight: 500;
-    margin: 0;
-}
-
-.saveBtn:hover .IconContainer {
-    width: 170px;
-    transition-duration: 0.3s;
-}
-
-.saveBtn:hover .text {
-    transform: translate(10px);
-    width: 0;
-    font-size: 0;
-    transition-duration: 0.3s;
-}
-
-.saveBtn:active {
-    transform: scale(0.95);
-    transition-duration: 0.3s;
-}
-
-/* Cancel Button */
+.saveBtn,
 .cancelBtn {
     width: 180px;
     height: 40px;
     border-radius: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.349);
-    background-color: rgb(12, 12, 12);
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition-duration: 0.3s;
-    overflow: hidden;
-    position: relative;
 }
 
-.cancelBtn .IconContainer {
-    width: 30px;
-    height: 30px;
-    background: linear-gradient(to bottom, rgb(108, 117, 125), rgb(73, 80, 87));
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    z-index: 2;
-    transition-duration: 0.3s;
+/* Special States */
+.bookmarkBtn.saved {
+    border-color: rgba(144, 238, 144, 0.5);
 }
 
-.cancelBtn .icon {
-    border-radius: 1px;
-    color: white;
-    font-size: 16px;
+.bookmarkBtn.saved:hover {
+    background: rgb(144, 238, 144);
+    box-shadow: 0 0 30px 5px rgba(144, 238, 144, 0.815);
 }
 
-.cancelBtn .text {
-    height: 100%;
-    width: 140px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    z-index: 1;
-    transition-duration: 0.3s;
-    font-size: 1.04em;
-    font-weight: 500;
-    margin: 0;
+.accordion-button:not(.collapsed) {
+    background: rgb(61, 106, 255) !important;
+    color: #fff !important;
 }
 
-.cancelBtn:hover .IconContainer {
-    width: 170px;
-    transition-duration: 0.3s;
-}
-
-.cancelBtn:hover .text {
-    transform: translate(10px);
-    width: 0;
-    font-size: 0;
-    transition-duration: 0.3s;
-}
-
-.cancelBtn:active {
-    transform: scale(0.95);
-    transition-duration: 0.3s;
+/* Animation Keyframes */
+@keyframes sh02 {
+    from {
+        opacity: 0;
+        left: 0%;
+    }
+    50% {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+        left: 100%;
+    }
 }
 
 /* Modal and Form Button Overrides */
 .modal .btn {
     min-width: 100px;
     margin: 0 5px;
-}
-
-.accordion-button {
-    position: relative;
-    padding: 10px 20px;
-    border-radius: 7px;
-    border: 1px solid rgb(61, 106, 255);
-    font-size: 14px;
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 2px;
-    background: transparent !important;
-    color: #fff !important;
-    overflow: hidden;
-    box-shadow: 0 0 0 0 transparent;
-    transition: all 0.2s ease-in;
-}
-
-.accordion-button:hover {
-    background: rgb(61, 106, 255) !important;
-    box-shadow: 0 0 30px 5px rgba(0, 142, 236, 0.815);
-    color: #fff !important;
-}
-
-.accordion-button:not(.collapsed) {
-    background: rgb(61, 106, 255) !important;
-    color: #fff !important;
 }
 
 /* Button Disabled States */
