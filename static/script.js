@@ -137,68 +137,36 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     };
 
-    // Notification system
-    window.showNotification = function(message, type = 'info') {
-        const alertDiv = document.createElement('div');
-        alertDiv.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show`;
-        alertDiv.innerHTML = `
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        `;
-        
-        // Insert at top of main content
-        const main = document.querySelector('main');
-        if (main) {
-            main.insertBefore(alertDiv, main.firstChild);
-        }
-        
-        // Auto-hide after 5 seconds
-        setTimeout(() => {
-            const alert = bootstrap.Alert.getInstance(alertDiv);
-            if (alert) {
-                alert.close();
-            }
-        }, 5000);
-    };
-
-    // Format file size helper
-    function formatFileSize(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    }
-
-    // Copy to clipboard functionality
-    window.copyToClipboard = function(text) {
-        navigator.clipboard.writeText(text).then(function() {
-            showNotification('Copied to clipboard!', 'success');
-        }).catch(function(err) {
-            console.error('Could not copy text: ', err);
-            showNotification('Failed to copy to clipboard', 'error');
-        });
-    };
-
-    // Print functionality
-    window.printQuote = function() {
-        window.print();
-    };
-
-    // Social sharing (if needed)
-    window.shareQuote = function(text, author) {
-        if (navigator.share) {
-            navigator.share({
-                title: 'Philosophical Quote',
-                text: `"${text}" — ${author}`,
-                url: window.location.href
-            }).catch(err => console.log('Error sharing:', err));
-        } else {
-            // Fallback to copying to clipboard
-            copyToClipboard(`"${text}" — ${author}\n\nShared from PhiloQuote: ${window.location.href}`);
-        }
-    };
+    // Overlay notification for Flask flash messages
+    const flaskAlerts = document.querySelectorAll('.alert-flask');
+    flaskAlerts.forEach(function(alert) {
+        const type = alert.dataset.category || 'info';
+        const message = alert.innerText;
+        showNotification(message, type);
+        alert.remove();
+    });
 });
+
+// Notification system (overlay)
+window.showNotification = function(message, type = 'info') {
+    let container = document.getElementById('overlay-notification-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'overlay-notification-container';
+        document.body.appendChild(container);
+    }
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `overlay-alert alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    container.appendChild(alertDiv);
+    setTimeout(() => {
+        const alert = bootstrap.Alert.getOrCreateInstance(alertDiv);
+        if (alert) alert.close();
+    }, 4000);
+};
 
 // Service Worker registration (for potential offline functionality)
 if ('serviceWorker' in navigator) {

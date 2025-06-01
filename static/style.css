@@ -778,3 +778,30 @@ button:active,
         gap: 0.25rem;
     }
 }
+
+/* Overlay Notification Styles */
+#overlay-notification-container {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+}
+.overlay-alert {
+    min-width: 280px;
+    max-width: 90vw;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    pointer-events: auto;
+    opacity: 0.98;
+    font-size: 1.05rem;
+    animation: overlay-fade-in 0.4s;
+}
+@keyframes overlay-fade-in {
+    from { opacity: 0; transform: translateY(-20px) scale(0.98); }
+    to { opacity: 0.98; transform: translateY(0) scale(1); }
+}
