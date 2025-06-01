@@ -1,8 +1,7 @@
 
-
 {% extends "base.html" %}
 
-{% block title %}My Library - PhiloQuote{% endblock %}
+{% block title %}My Library - Logos Daily{% endblock %}
 
 {% block content %}
 <div class="container py-5">
@@ -202,107 +201,145 @@
 let currentEntryId = null;
 
 function confirmDelete(entryId) {
-    document.getElementById('deleteEntryId').value = entryId;
-    const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
-    modal.show();
+    const deleteEntryIdElement = document.getElementById('deleteEntryId');
+    if (deleteEntryIdElement) {
+        deleteEntryIdElement.value = entryId;
+        const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        modal.show();
+    }
 }
 
 function viewThoughts(entryId) {
     const entryCard = document.querySelector(`[data-entry-id="${entryId}"]`);
+    if (!entryCard) return;
+    
     const thoughtsSection = entryCard.querySelector('.thoughts-section');
-    const thoughtsContent = thoughtsSection.querySelector('.thoughts-content');
-    const thoughtsUpdated = thoughtsSection.querySelector('.thoughts-updated');
+    const thoughtsContent = thoughtsSection ? thoughtsSection.querySelector('.thoughts-content') : null;
+    const thoughtsUpdated = thoughtsSection ? thoughtsSection.querySelector('.thoughts-updated') : null;
     
     // Set the modal content
-    document.getElementById('thoughtsContent').innerText = thoughtsContent ? thoughtsContent.innerText : '';
+    const thoughtsContentElement = document.getElementById('thoughtsContent');
+    const thoughtsUpdatedElement = document.getElementById('thoughtsUpdated');
+    const modalEntryIdElement = document.getElementById('modalEntryId');
+    const modalTextareaElement = document.getElementById('modalThoughtsTextarea');
     
-    const updatedText = thoughtsUpdated && thoughtsUpdated.innerText.trim() ? 
-        `Last updated: ${thoughtsUpdated.innerText}` : '';
-    document.getElementById('thoughtsUpdated').innerText = updatedText;
+    if (thoughtsContentElement) {
+        thoughtsContentElement.innerText = thoughtsContent ? thoughtsContent.innerText : '';
+    }
+    
+    if (thoughtsUpdatedElement) {
+        const updatedText = thoughtsUpdated && thoughtsUpdated.innerText.trim() ? 
+            `Last updated: ${thoughtsUpdated.innerText}` : '';
+        thoughtsUpdatedElement.innerText = updatedText;
+    }
     
     // Store current entry ID and thoughts text for editing
     currentEntryId = entryId;
-    document.getElementById('modalEntryId').value = entryId;
-    document.getElementById('modalThoughtsTextarea').value = thoughtsContent ? thoughtsContent.innerText : '';
+    if (modalEntryIdElement) {
+        modalEntryIdElement.value = entryId;
+    }
+    if (modalTextareaElement) {
+        modalTextareaElement.value = thoughtsContent ? thoughtsContent.innerText : '';
+    }
     
     // Ensure we're in view mode
     switchToViewMode();
     
     // Show the modal
-    const modal = new bootstrap.Modal(document.getElementById('thoughtsModal'));
-    modal.show();
+    const modalElement = document.getElementById('thoughtsModal');
+    if (modalElement) {
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+    }
 }
 
 function switchToEditMode() {
-    document.getElementById('thoughtsViewMode').style.display = 'none';
-    document.getElementById('thoughtsEditMode').style.display = 'block';
-    document.getElementById('viewModeButtons').style.display = 'none';
-    document.getElementById('editModeButtons').style.display = 'block';
+    const viewMode = document.getElementById('thoughtsViewMode');
+    const editMode = document.getElementById('thoughtsEditMode');
+    const viewButtons = document.getElementById('viewModeButtons');
+    const editButtons = document.getElementById('editModeButtons');
+    
+    if (viewMode) viewMode.style.display = 'none';
+    if (editMode) editMode.style.display = 'block';
+    if (viewButtons) viewButtons.style.display = 'none';
+    if (editButtons) editButtons.style.display = 'block';
     
     // Focus and resize textarea
     const textarea = document.getElementById('modalThoughtsTextarea');
-    setTimeout(() => {
-        textarea.focus();
-        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
-        textarea.style.height = 'auto';
-        textarea.style.height = Math.min(textarea.scrollHeight, 300) + 'px';
-    }, 100);
+    if (textarea) {
+        setTimeout(() => {
+            textarea.focus();
+            textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 300) + 'px';
+        }, 100);
+    }
 }
 
 function switchToViewMode() {
-    document.getElementById('thoughtsViewMode').style.display = 'block';
-    document.getElementById('thoughtsEditMode').style.display = 'none';
-    document.getElementById('viewModeButtons').style.display = 'block';
-    document.getElementById('editModeButtons').style.display = 'none';
+    const viewMode = document.getElementById('thoughtsViewMode');
+    const editMode = document.getElementById('thoughtsEditMode');
+    const viewButtons = document.getElementById('viewModeButtons');
+    const editButtons = document.getElementById('editModeButtons');
+    
+    if (viewMode) viewMode.style.display = 'block';
+    if (editMode) editMode.style.display = 'none';
+    if (viewButtons) viewButtons.style.display = 'block';
+    if (editButtons) editButtons.style.display = 'none';
     
     // Reset textarea content from the original thoughts
     if (currentEntryId) {
         const entryCard = document.querySelector(`[data-entry-id="${currentEntryId}"]`);
-        const thoughtsContent = entryCard.querySelector('.thoughts-content');
-        document.getElementById('modalThoughtsTextarea').value = thoughtsContent ? thoughtsContent.innerText : '';
+        const thoughtsContent = entryCard ? entryCard.querySelector('.thoughts-content') : null;
+        const modalTextarea = document.getElementById('modalThoughtsTextarea');
+        if (modalTextarea) {
+            modalTextarea.value = thoughtsContent ? thoughtsContent.innerText : '';
+        }
     }
 }
 
 function showThoughtsForm(entryId) {
     const entryCard = document.querySelector(`[data-entry-id="${entryId}"]`);
+    if (!entryCard) return;
+    
     const thoughtsForm = entryCard.querySelector('.thoughts-form');
     const quoteActions = entryCard.querySelector('.quote-actions');
     const thoughtsSection = entryCard.querySelector('.thoughts-section');
     
     // Hide the action buttons and existing thoughts display
-    quoteActions.style.display = 'none';
-    if (thoughtsSection) {
-        thoughtsSection.style.display = 'none';
-    }
+    if (quoteActions) quoteActions.style.display = 'none';
+    if (thoughtsSection) thoughtsSection.style.display = 'none';
     
     // Show the form
-    thoughtsForm.style.display = 'block';
+    if (thoughtsForm) thoughtsForm.style.display = 'block';
     
     // Focus the textarea
-    const textarea = thoughtsForm.querySelector('textarea');
-    setTimeout(() => {
-        textarea.focus();
-        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
-        // Trigger auto-resize
-        textarea.style.height = 'auto';
-        textarea.style.height = textarea.scrollHeight + 'px';
-    }, 100);
+    const textarea = thoughtsForm ? thoughtsForm.querySelector('textarea') : null;
+    if (textarea) {
+        setTimeout(() => {
+            textarea.focus();
+            textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+            // Trigger auto-resize
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }, 100);
+    }
 }
 
 function hideThoughtsForm(entryId) {
     const entryCard = document.querySelector(`[data-entry-id="${entryId}"]`);
+    if (!entryCard) return;
+    
     const thoughtsForm = entryCard.querySelector('.thoughts-form');
     const quoteActions = entryCard.querySelector('.quote-actions');
     const thoughtsSection = entryCard.querySelector('.thoughts-section');
     
     // Hide the form
-    thoughtsForm.style.display = 'none';
+    if (thoughtsForm) thoughtsForm.style.display = 'none';
     
     // Show the action buttons and existing thoughts display
-    quoteActions.style.display = 'flex';
-    if (thoughtsSection) {
-        thoughtsSection.style.display = 'block';
-    }
+    if (quoteActions) quoteActions.style.display = 'flex';
+    if (thoughtsSection) thoughtsSection.style.display = 'block';
 }
 
 // Auto-resize textareas and handle focus
@@ -321,29 +358,42 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Edit thoughts button functionality
-    document.getElementById('editThoughtsBtn').addEventListener('click', function() {
-        if (currentEntryId) {
-            switchToEditMode();
-        }
-    });
+    const editThoughtsBtn = document.getElementById('editThoughtsBtn');
+    if (editThoughtsBtn) {
+        editThoughtsBtn.addEventListener('click', function() {
+            if (currentEntryId) {
+                switchToEditMode();
+            }
+        });
+    }
     
     // Cancel edit button functionality
-    document.getElementById('cancelEditBtn').addEventListener('click', function() {
-        switchToViewMode();
-    });
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    if (cancelEditBtn) {
+        cancelEditBtn.addEventListener('click', function() {
+            switchToViewMode();
+        });
+    }
     
     // Save edit button functionality
-    document.getElementById('saveEditBtn').addEventListener('click', function() {
-        const form = document.getElementById('modalThoughtsForm');
-        form.submit();
-    });
+    const saveEditBtn = document.getElementById('saveEditBtn');
+    if (saveEditBtn) {
+        saveEditBtn.addEventListener('click', function() {
+            const form = document.getElementById('modalThoughtsForm');
+            if (form) {
+                form.submit();
+            }
+        });
+    }
     
     // Auto-resize modal textarea
     const modalTextarea = document.getElementById('modalThoughtsTextarea');
-    modalTextarea.addEventListener('input', function() {
-        this.style.height = 'auto';
-        this.style.height = Math.min(this.scrollHeight, 300) + 'px';
-    });
+    if (modalTextarea) {
+        modalTextarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 300) + 'px';
+        });
+    }
     
     // Focus on specific entry if requested
     {% if focus_entry_id %}
