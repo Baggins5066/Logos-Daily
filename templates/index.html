@@ -89,75 +89,92 @@
     </div>
     {% endif %}
 </div>
-{% endblock %}
-
 <!-- Thoughts Modal -->
-<div class="modal fade" id="thoughtsModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-lightbulb me-2"></i>My Thoughts
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="quote-context mb-4 p-3 bg-dark border rounded">
-                    <blockquote class="blockquote mb-2">
-                        <i class="fas fa-quote-left text-muted me-2"></i>
-                        <span id="modalQuoteText">{{ quote.text if quote else '' }}</span>
-                    </blockquote>
-                    <div class="text-end">
-                        <small class="text-muted">— <span id="modalQuoteAuthor">{{ quote.author if quote else '' }}</span></small>
-                    </div>
+    <div class="modal fade" id="thoughtsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-lightbulb me-2"></i>My Thoughts
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                
-                <form id="thoughtsForm" method="POST" action="{{ url_for('save_quote_and_add_notes') }}">
-                    <input type="hidden" name="quote_id" id="modalQuoteId" value="{{ quote.id if quote else '' }}">
-                    <div class="mb-3">
-                        <label for="thoughtsTextarea" class="form-label">What insights or reflections does this quote inspire?</label>
-                        <textarea class="form-control" name="notes" id="thoughtsTextarea" rows="6" 
-                                placeholder="How does this quote apply to your life? What deeper meanings do you find in it?"></textarea>
+                <div class="modal-body">
+                    <div class="quote-context mb-4 p-3 bg-dark border rounded">
+                        <blockquote class="blockquote mb-2">
+                            <i class="fas fa-quote-left text-muted me-2"></i>
+                            <span id="modalQuoteText">{{ quote.text if quote else '' }}</span>
+                        </blockquote>
+                        <div class="text-end">
+                            <small class="text-muted">— <span id="modalQuoteAuthor">{{ quote.author if quote else '' }}</span></small>
+                        </div>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-1"></i>Cancel
-                </button>
-                <button type="button" class="btn btn-success" id="saveThoughtsBtn">
-                    <i class="fas fa-save me-1"></i>Save to Journal
-                </button>
+                    
+                    <form id="thoughtsForm" method="POST" action="{{ url_for('save_quote_and_add_notes') }}">
+                        <input type="hidden" name="quote_id" id="modalQuoteId" value="{{ quote.id if quote else '' }}">
+                        <div class="mb-3">
+                            <label for="thoughtsTextarea" class="form-label">What insights or reflections does this quote inspire?</label>
+                            <textarea class="form-control" name="notes" id="thoughtsTextarea" rows="6" 
+                                    placeholder="How does this quote apply to your life? What deeper meanings do you find in it?"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancel
+                    </button>
+                    <button type="button" class="btn btn-success" id="saveThoughtsBtn">
+                        <i class="fas fa-save me-1"></i>Save to Journal
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
 
 {% block scripts %}
 <script>
 function openThoughtsModal(quoteId) {
     // Get the current quote text and author from the page
-    const quoteText = document.querySelector('.quote-text').textContent.trim();
-    const quoteAuthor = document.querySelector('.quote-author').textContent.replace('— ', '').trim();
+    const quoteTextEl = document.querySelector('.quote-text');
+    const quoteAuthorEl = document.querySelector('.quote-author');
+    
+    if (!quoteTextEl || !quoteAuthorEl) {
+        console.error('Quote elements not found');
+        return;
+    }
+    
+    const quoteText = quoteTextEl.textContent.trim();
+    const quoteAuthor = quoteAuthorEl.textContent.replace('— ', '').trim();
     
     // Set the quote ID in the form
-    document.getElementById('modalQuoteId').value = quoteId;
+    const modalQuoteId = document.getElementById('modalQuoteId');
+    const modalQuoteText = document.getElementById('modalQuoteText');
+    const modalQuoteAuthor = document.getElementById('modalQuoteAuthor');
+    const thoughtsTextarea = document.getElementById('thoughtsTextarea');
     
-    // Populate the modal with the current quote
-    document.getElementById('modalQuoteText').textContent = quoteText;
-    document.getElementById('modalQuoteAuthor').textContent = quoteAuthor;
+    if (!modalQuoteId || !modalQuoteText || !modalQuoteAuthor || !thoughtsTextarea) {
+        console.error('Modal elements not found');
+        return;
+    }
     
-    // Clear any existing text
-    document.getElementById('thoughtsTextarea').value = '';
+    modalQuoteId.value = quoteId;
+    modalQuoteText.textContent = quoteText;
+    modalQuoteAuthor.textContent = quoteAuthor;
+    thoughtsTextarea.value = '';
     
     // Show the modal
-    const modal = new bootstrap.Modal(document.getElementById('thoughtsModal'));
-    modal.show();
-    
-    // Focus the textarea after modal is shown
-    setTimeout(() => {
-        document.getElementById('thoughtsTextarea').focus();
-    }, 300);
+    const modalEl = document.getElementById('thoughtsModal');
+    if (modalEl) {
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+        
+        // Focus the textarea after modal is shown
+        setTimeout(() => {
+            thoughtsTextarea.focus();
+        }, 300);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -168,12 +185,23 @@ document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('thoughtsForm');
             const textarea = document.getElementById('thoughtsTextarea');
             
+            if (!form || !textarea) {
+                console.error('Form elements not found');
+                return;
+            }
+            
             // Check if there's any content
             if (textarea.value.trim()) {
                 form.submit();
             } else {
                 // If no content, just save the quote without notes
-                const quoteId = document.getElementById('modalQuoteId').value;
+                const modalQuoteId = document.getElementById('modalQuoteId');
+                if (!modalQuoteId) {
+                    console.error('Modal quote ID not found');
+                    return;
+                }
+                
+                const quoteId = modalQuoteId.value;
                 const saveForm = document.createElement('form');
                 saveForm.method = 'POST';
                 saveForm.action = '{{ url_for("save_quote") }}';
