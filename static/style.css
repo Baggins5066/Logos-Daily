@@ -109,11 +109,114 @@ body {
    ======================================== */
 /* Common Button Properties */
 .btn {
-    transition: all 0.2s ease-in-out;
+    position: relative;
+    padding: 10px 20px;
+    border-radius: 7px;
+    border: 1px solid rgb(61, 106, 255);
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 2px;
+    background: transparent;
+    color: #fff !important;
+    overflow: hidden;
+    box-shadow: 0 0 0 0 transparent;
+    transition: all 0.2s ease-in;
+    text-decoration: none;
+    display: inline-block;
 }
 
 .btn:hover {
-    transform: translateY(-1px);
+    background: rgb(61, 106, 255);
+    box-shadow: 0 0 30px 5px rgba(0, 142, 236, 0.815);
+    transition: all 0.2s ease-out;
+    color: #fff !important;
+    text-decoration: none;
+    transform: none;
+}
+
+.btn:hover::before {
+    animation: sh02 0.5s 0s linear;
+}
+
+.btn::before {
+    content: '';
+    display: block;
+    width: 0px;
+    height: 86%;
+    position: absolute;
+    top: 7%;
+    left: 0%;
+    opacity: 0;
+    background: #fff;
+    box-shadow: 0 0 50px 30px #fff;
+    transform: skewX(-20deg);
+}
+
+.btn:active {
+    box-shadow: 0 0 0 0 transparent;
+    transition: box-shadow 0.2s ease-in;
+}
+
+/* Primary Button Variant */
+.btn-primary {
+    border-color: rgb(172, 70, 255);
+}
+
+.btn-primary:hover {
+    background: rgb(172, 70, 255);
+    box-shadow: 0 0 30px 5px rgba(172, 70, 255, 0.815);
+}
+
+/* Secondary Button Variant */
+.btn-secondary {
+    border-color: rgb(108, 117, 125);
+}
+
+.btn-secondary:hover {
+    background: rgb(108, 117, 125);
+    box-shadow: 0 0 30px 5px rgba(108, 117, 125, 0.815);
+}
+
+/* Danger Button Variant */
+.btn-danger {
+    border-color: rgb(220, 53, 69);
+}
+
+.btn-danger:hover {
+    background: rgb(220, 53, 69);
+    box-shadow: 0 0 30px 5px rgba(220, 53, 69, 0.815);
+}
+
+/* Success Button Variant */
+.btn-success {
+    border-color: rgb(40, 167, 69);
+}
+
+.btn-success:hover {
+    background: rgb(40, 167, 69);
+    box-shadow: 0 0 30px 5px rgba(40, 167, 69, 0.815);
+}
+
+/* Outline Button Variants */
+.btn-outline-primary {
+    border-color: rgb(172, 70, 255);
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background: rgb(172, 70, 255);
+    box-shadow: 0 0 30px 5px rgba(172, 70, 255, 0.815);
+}
+
+.btn-outline-danger {
+    border-color: rgb(220, 53, 69);
+    background: transparent;
+}
+
+.btn-outline-danger:hover {
+    background: rgb(220, 53, 69);
+    box-shadow: 0 0 30px 5px rgba(220, 53, 69, 0.815);
 }
 
 /* Save to Journal */
@@ -381,6 +484,39 @@ body {
     transition-duration: 0.3s;
 }
 
+/* Modal and Form Button Overrides */
+.modal .btn {
+    min-width: 100px;
+    margin: 0 5px;
+}
+
+.accordion-button {
+    position: relative;
+    padding: 10px 20px;
+    border-radius: 7px;
+    border: 1px solid rgb(61, 106, 255);
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 2px;
+    background: transparent !important;
+    color: #fff !important;
+    overflow: hidden;
+    box-shadow: 0 0 0 0 transparent;
+    transition: all 0.2s ease-in;
+}
+
+.accordion-button:hover {
+    background: rgb(61, 106, 255) !important;
+    box-shadow: 0 0 30px 5px rgba(0, 142, 236, 0.815);
+    color: #fff !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background: rgb(61, 106, 255) !important;
+    color: #fff !important;
+}
+
 /* Button Disabled States */
 .btn:disabled,
 .noteBtn:disabled,
@@ -389,6 +525,11 @@ body {
 .cancelBtn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+.btn:disabled:hover {
+    background: transparent !important;
+    box-shadow: none !important;
 }
 
 /* ========================================
