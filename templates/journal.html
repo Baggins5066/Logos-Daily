@@ -166,11 +166,10 @@ function showNotesForm(entryId) {
     const entryCard = document.querySelector(`[data-entry-id="${entryId}"]`);
     const notesForm = entryCard.querySelector('.notes-form');
     const notesActions = entryCard.querySelector('.notes-actions');
-    const actionButtons = entryCard.querySelector('.action-buttons');
     const existingNotes = entryCard.querySelector('.existing-notes');
     
-    // Hide the action buttons and existing notes display
-    actionButtons.style.display = 'none';
+    // Hide the entire notes-actions section and existing notes display
+    notesActions.style.display = 'none';
     if (existingNotes) {
         existingNotes.style.display = 'none';
     }
@@ -193,14 +192,13 @@ function hideNotesForm(entryId) {
     const entryCard = document.querySelector(`[data-entry-id="${entryId}"]`);
     const notesForm = entryCard.querySelector('.notes-form');
     const notesActions = entryCard.querySelector('.notes-actions');
-    const actionButtons = entryCard.querySelector('.action-buttons');
     const existingNotes = entryCard.querySelector('.existing-notes');
     
     // Hide the form
     notesForm.style.display = 'none';
     
-    // Show the action buttons and existing notes display
-    actionButtons.style.display = 'flex';
+    // Show the notes-actions section and existing notes display
+    notesActions.style.display = 'flex';
     if (existingNotes) {
         existingNotes.style.display = 'block';
     }
