@@ -7,7 +7,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app import app, db
 from models import Quote, JournalEntry
 from utils import get_session_id, get_daily_quote, update_streak, import_quotes_from_csv, import_quotes_from_json, add_sample_quotes
-from openai_service import explain_quote, chat_about_quote
 
 # Admin credentials (in production, use proper user management)
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "admin")
@@ -199,65 +198,6 @@ def delete_entry():
     
     return redirect(url_for('library'))
 
-@app.route('/explain_quote', methods=['POST'])
-def explain_quote_route():
-    """Get AI explanation for a quote"""
-    quote_id = request.form.get('quote_id')
-    
-    if not quote_id:
-        return jsonify({'error': 'No quote specified'}), 400
-    
-    quote = Quote.query.get(quote_id)
-    if not quote:
-        return jsonify({'error': 'Quote not found'}), 404
-    
-    explanation = explain_quote(quote.text, quote.author)
-    
-    # Store explanation in session for display
-    session['current_explanation'] = {
-        'quote_id': quote_id,
-        'explanation': explanation
-    }
-    
-    return jsonify({'explanation': explanation})
-
-@app.route('/chat', methods=['POST'])
-def chat():
-    """Chat about the current quote"""
-    quote_id = request.form.get('quote_id')
-    message = request.form.get('message', '').strip()
-    
-    if not quote_id or not message:
-        return jsonify({'error': 'Quote ID and message required'}), 400
-    
-    quote = Quote.query.get(quote_id)
-    if not quote:
-        return jsonify({'error': 'Quote not found'}), 404
-    
-    # Get conversation history from session
-    conversation_key = f'conversation_{quote_id}'
-    conversation_history = session.get(conversation_key, [])
-    
-    # Get AI response
-    ai_response = chat_about_quote(quote.text, quote.author, message, conversation_history)
-    
-    # Update conversation history
-    conversation_history.extend([
-        {"role": "user", "content": message},
-        {"role": "assistant", "content": ai_response}
-    ])
-    
-    # Keep only last 10 messages to avoid session size issues
-    if len(conversation_history) > 10:
-        conversation_history = conversation_history[-10:]
-    
-    session[conversation_key] = conversation_history
-    
-    return jsonify({
-        'user_message': message,
-        'ai_response': ai_response
-    })
-
 @app.route('/admin')
 def admin():
     """Admin panel for quote management"""
@@ -351,6 +291,3 @@ def truncate_words(text, length=50):
     if len(words) <= length:
         return text
     return ' '.join(words[:length]) + '...'
-
-if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
