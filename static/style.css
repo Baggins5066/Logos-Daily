@@ -124,7 +124,7 @@ button,
     text-transform: uppercase;
     font-weight: 600;
     letter-spacing: 2px;
-    background: transparent;
+    background: rgb(61, 106, 255);
     color: #fff;
     overflow: hidden;
     box-shadow: 0 0 0 0 transparent;
@@ -208,6 +208,7 @@ button:active,
 /* Button Color Variants */
 .btn-primary {
     border-color: rgb(172, 70, 255);
+    background: rgb(172, 70, 255);
 }
 
 .btn-primary:hover {
@@ -218,6 +219,7 @@ button:active,
 .btn-secondary,
 .cancelBtn {
     border-color: rgb(108, 117, 125);
+    background: rgb(108, 117, 125);
 }
 
 .btn-secondary:hover,
@@ -229,6 +231,7 @@ button:active,
 .btn-danger,
 .deleteBtn {
     border-color: rgb(220, 53, 69);
+    background: rgb(220, 53, 69);
 }
 
 .btn-danger:hover,
@@ -240,6 +243,7 @@ button:active,
 .btn-success,
 .saveBtn {
     border-color: rgb(40, 167, 69);
+    background: rgb(40, 167, 69);
 }
 
 .btn-success:hover,
@@ -251,6 +255,7 @@ button:active,
 .btn-outline-primary,
 .bookmarkBtn {
     border-color: rgb(172, 70, 255);
+    background: rgb(172, 70, 255);
 }
 
 .btn-outline-primary:hover,
@@ -261,6 +266,7 @@ button:active,
 
 .btn-outline-danger {
     border-color: rgb(220, 53, 69);
+    background: rgb(220, 53, 69);
 }
 
 .btn-outline-danger:hover {
@@ -270,6 +276,7 @@ button:active,
 
 .noteBtn {
     border-color: rgb(255, 193, 7);
+    background: rgb(255, 193, 7);
 }
 
 .noteBtn:hover {
@@ -313,6 +320,7 @@ button:active,
 /* Special States */
 .bookmarkBtn.saved {
     border-color: rgba(144, 238, 144, 0.5);
+    background: rgb(144, 238, 144);
 }
 
 .bookmarkBtn.saved:hover {
@@ -357,7 +365,7 @@ button:active,
 }
 
 .btn:disabled:hover {
-    background: transparent !important;
+    background: rgba(108, 117, 125, 0.6) !important;
     box-shadow: none !important;
 }
 
