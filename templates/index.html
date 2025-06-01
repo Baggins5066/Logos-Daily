@@ -90,46 +90,46 @@
     {% endif %}
 </div>
 <!-- Thoughts Modal -->
-    <div class="modal fade" id="thoughtsModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-lightbulb me-2"></i>My Thoughts
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="quote-context mb-4 p-3 bg-dark border rounded">
-                        <blockquote class="blockquote mb-2">
-                            <i class="fas fa-quote-left text-muted me-2"></i>
-                            <span id="modalQuoteText">{{ quote.text if quote else '' }}</span>
-                        </blockquote>
-                        <div class="text-end">
-                            <small class="text-muted">— <span id="modalQuoteAuthor">{{ quote.author if quote else '' }}</span></small>
-                        </div>
+<div class="modal fade" id="thoughtsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-lightbulb me-2"></i>My Thoughts
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="quote-context mb-4 p-3 bg-dark border rounded">
+                    <blockquote class="blockquote mb-2">
+                        <i class="fas fa-quote-left text-muted me-2"></i>
+                        <span id="modalQuoteText">{{ quote.text if quote else '' }}</span>
+                    </blockquote>
+                    <div class="text-end">
+                        <small class="text-muted">— <span id="modalQuoteAuthor">{{ quote.author if quote else '' }}</span></small>
                     </div>
-                    
-                    <form id="thoughtsForm" method="POST" action="{{ url_for('save_quote_and_add_notes') }}">
-                        <input type="hidden" name="quote_id" id="modalQuoteId" value="{{ quote.id if quote else '' }}">
-                        <div class="mb-3">
-                            <label for="thoughtsTextarea" class="form-label">What insights or reflections does this quote inspire?</label>
-                            <textarea class="form-control" name="notes" id="thoughtsTextarea" rows="6" 
-                                    placeholder="How does this quote apply to your life? What deeper meanings do you find in it?"></textarea>
-                        </div>
-                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-1"></i>Cancel
-                    </button>
-                    <button type="button" class="btn btn-success" id="saveThoughtsBtn">
-                        <i class="fas fa-save me-1"></i>Save to Journal
-                    </button>
-                </div>
+                
+                <form id="thoughtsForm" method="POST" action="{{ url_for('save_quote_and_add_notes') }}">
+                    <input type="hidden" name="quote_id" id="modalQuoteId" value="{{ quote.id if quote else '' }}">
+                    <div class="mb-3">
+                        <label for="thoughtsTextarea" class="form-label">What insights or reflections does this quote inspire?</label>
+                        <textarea class="form-control" name="notes" id="thoughtsTextarea" rows="6" 
+                                placeholder="How does this quote apply to your life? What deeper meanings do you find in it?"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cancel
+                </button>
+                <button type="button" class="btn btn-success" id="saveThoughtsBtn">
+                    <i class="fas fa-save me-1"></i>Save to Journal
+                </button>
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}
 
