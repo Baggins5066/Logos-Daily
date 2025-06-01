@@ -42,7 +42,7 @@ def index():
 
 @app.route('/save_quote', methods=['POST'])
 def save_quote():
-    """Save the daily quote to user's journal"""
+    """Save the daily quote to user's library"""
     quote_id = request.form.get('quote_id')
     if not quote_id:
         flash('No quote specified', 'error')
@@ -57,23 +57,23 @@ def save_quote():
     ).first()
     
     if existing_entry:
-        flash('Quote already saved to your journal!', 'info')
+        flash('Quote already saved to your library!', 'info')
     else:
-        # Create new journal entry
-        journal_entry = JournalEntry(
+        # Create new library entry
+        library_entry = JournalEntry(
             quote_id=quote_id,
             user_session_id=session_id,
             user_notes=""
         )
-        db.session.add(journal_entry)
+        db.session.add(library_entry)
         db.session.commit()
-        flash('Quote saved to your journal!', 'success')
+        flash('Quote saved to your library!', 'success')
     
     return redirect(url_for('index'))
 
 @app.route('/save_quote_and_redirect', methods=['POST'])
 def save_quote_and_redirect():
-    """Save the daily quote to user's journal and redirect to journal with focus"""
+    """Save the daily quote to user's library and redirect to library with focus"""
     quote_id = request.form.get('quote_id')
     if not quote_id:
         flash('No quote specified', 'error')
@@ -88,25 +88,25 @@ def save_quote_and_redirect():
     ).first()
     
     if not existing_entry:
-        # Create new journal entry
-        journal_entry = JournalEntry(
+        # Create new library entry
+        library_entry = JournalEntry(
             quote_id=quote_id,
             user_session_id=session_id,
             user_notes=""
         )
-        db.session.add(journal_entry)
+        db.session.add(library_entry)
         db.session.commit()
-        flash('Quote saved to your journal!', 'success')
-        entry_id = journal_entry.id
+        flash('Quote saved to your library!', 'success')
+        entry_id = library_entry.id
     else:
         entry_id = existing_entry.id
     
-    # Redirect to journal with focus parameter
-    return redirect(url_for('journal', focus_entry=entry_id))
+    # Redirect to library with focus parameter
+    return redirect(url_for('library', focus_entry=entry_id))
 
 @app.route('/save_quote_and_add_notes', methods=['POST'])
 def save_quote_and_add_notes():
-    """Save the daily quote to user's journal with notes and redirect to journal"""
+    """Save the daily quote to user's library with notes and redirect to library"""
     quote_id = request.form.get('quote_id')
     notes = request.form.get('notes', '').strip()
     
@@ -123,15 +123,15 @@ def save_quote_and_add_notes():
     ).first()
     
     if not existing_entry:
-        # Create new journal entry
-        journal_entry = JournalEntry(
+        # Create new library entry
+        library_entry = JournalEntry(
             quote_id=quote_id,
             user_session_id=session_id,
             user_notes=notes
         )
-        db.session.add(journal_entry)
+        db.session.add(library_entry)
         db.session.commit()
-        flash('Quote and thoughts saved to your journal!', 'success')
+        flash('Quote and thoughts saved to your library!', 'success')
     else:
         # Update existing entry with notes
         existing_entry.user_notes = notes
@@ -139,25 +139,25 @@ def save_quote_and_add_notes():
         db.session.commit()
         flash('Your thoughts have been updated!', 'success')
     
-    # Redirect to journal
-    return redirect(url_for('journal'))
+    # Redirect to library
+    return redirect(url_for('library'))
 
-@app.route('/journal')
-def journal():
-    """Display user's journal with saved quotes"""
+@app.route('/library')
+def library():
+    """Display user's library with saved quotes"""
     session_id = get_session_id()
     focus_entry_id = request.args.get('focus_entry')
     
-    # Get all journal entries for this user
+    # Get all library entries for this user
     entries = JournalEntry.query.filter_by(user_session_id=session_id)\
                               .order_by(JournalEntry.created_at.desc())\
                               .all()
     
-    return render_template('journal.html', entries=entries, focus_entry_id=focus_entry_id)
+    return render_template('library.html', entries=entries, focus_entry_id=focus_entry_id)
 
 @app.route('/update_notes', methods=['POST'])
 def update_notes():
-    """Update notes for a journal entry"""
+    """Update notes for a library entry"""
     entry_id = request.form.get('entry_id')
     notes = request.form.get('notes', '')
     
@@ -174,13 +174,13 @@ def update_notes():
         db.session.commit()
         flash('Notes updated successfully!', 'success')
     else:
-        flash('Journal entry not found', 'error')
+        flash('Library entry not found', 'error')
     
-    return redirect(url_for('journal'))
+    return redirect(url_for('library'))
 
 @app.route('/delete_entry', methods=['POST'])
 def delete_entry():
-    """Delete a journal entry"""
+    """Delete a library entry"""
     entry_id = request.form.get('entry_id')
     session_id = get_session_id()
     
@@ -193,11 +193,11 @@ def delete_entry():
     if entry:
         db.session.delete(entry)
         db.session.commit()
-        flash('Journal entry deleted', 'success')
+        flash('Library entry deleted', 'success')
     else:
-        flash('Journal entry not found', 'error')
+        flash('Library entry not found', 'error')
     
-    return redirect(url_for('journal'))
+    return redirect(url_for('library'))
 
 @app.route('/explain_quote', methods=['POST'])
 def explain_quote_route():

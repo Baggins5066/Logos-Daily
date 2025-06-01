@@ -1,0 +1,361 @@
+
+
+{% extends "base.html" %}
+
+{% block title %}My Library - PhiloQuote{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+            <div class="d-flex align-items-center mb-4">
+                <h1 class="mb-0">
+                    <i class="fas fa-book me-2"></i>My Library
+                </h1>
+            </div>
+
+            {% if entries %}
+                {% for entry in entries %}
+                <div class="library-entry-card mb-4" data-entry-id="{{ entry.id }}">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Quote Display -->
+                            <div class="quote-display">
+                                <blockquote class="blockquote mb-3">
+                                    <i class="fas fa-quote-left text-muted me-2"></i>
+                                    {{ entry.quote.text }}
+                                </blockquote>
+                                
+                                <div class="quote-author mb-3">
+                                    — {{ entry.quote.author }}
+                                </div>
+                                
+                                {% if entry.quote.tags %}
+                                <div class="quote-tags mb-3">
+                                    {% for tag in entry.quote.tags.split(',') %}
+                                    <span class="badge bg-secondary me-1">{{ tag.strip() }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                
+                                <div class="quote-meta d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar me-1"></i>
+                                        Saved on {{ entry.created_at.strftime('%B %d, %Y') }}
+                                    </small>
+                                    
+                                    <div class="quote-actions d-flex gap-2 justify-content-end">
+                                        {% if entry.user_notes and entry.user_notes.strip() %}
+                                        <button type="button" class="noteBtn" onclick="viewThoughts({{ entry.id }})" 
+                                                title="View your thoughts about this quote">
+                                            <i class="fas fa-file-alt icon"></i>
+                                        </button>
+                                        {% else %}
+                                        <button type="button" class="noteBtn" onclick="showThoughtsForm({{ entry.id }})" 
+                                                title="Add thoughts about this quote">
+                                            <i class="fas fa-edit icon"></i>
+                                        </button>
+                                        {% endif %}
+                                        <button type="button" class="deleteBtn" 
+                                                onclick="confirmDelete({{ entry.id }})" title="Delete this quote">
+                                            <i class="fas fa-trash icon"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Hidden thoughts section - no longer displayed inline -->
+                            <div class="thoughts-section" style="display: none;">
+                                {% if entry.user_notes and entry.user_notes.strip() %}
+                                <div class="thoughts-content">{{ entry.user_notes }}</div>
+                                <div class="thoughts-updated">
+                                    {% if entry.updated_at.date() != entry.created_at.date() %}
+                                    {{ entry.updated_at.strftime('%B %d, %Y') }}
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Thoughts Form (hidden by default) -->
+                            <form method="POST" action="{{ url_for('update_notes') }}" class="thoughts-form mt-4 pt-3" style="display: none; border-top: 1px solid var(--bs-border-color);">
+                                <input type="hidden" name="entry_id" value="{{ entry.id }}">
+                                <h6 class="mb-3">
+                                    <i class="fas fa-lightbulb me-1"></i>My Thoughts
+                                </h6>
+                                <div class="mb-3">
+                                    <textarea class="form-control" name="notes" rows="4" 
+                                            placeholder="What insights or reflections does this quote inspire? How does it apply to your life?">{{ entry.user_notes or '' }}</textarea>
+                                </div>
+                                <div class="d-flex justify-content-end gap-2">
+                                    <button type="button" class="cancelBtn" onclick="hideThoughtsForm({{ entry.id }})">
+                                        <i class="fas fa-times me-1"></i>Cancel
+                                    </button>
+                                    <button type="submit" class="saveBtn">
+                                        <i class="fas fa-save me-1"></i>Save
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state text-center py-5">
+                    <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+                    <h3>Your library is empty</h3>
+                    <p class="text-muted mb-4">
+                        Start building your philosophy collection by saving quotes that resonate with you.
+                    </p>
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        <i class="fas fa-quote-left me-1"></i>Discover Today's Quote
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- View Thoughts Modal -->
+<div class="modal fade" id="thoughtsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-lightbulb me-2"></i>My Thoughts
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- View Mode -->
+                <div id="thoughtsViewMode">
+                    <div id="thoughtsContent" class="thoughts-display p-3 bg-dark border rounded mb-3">
+                        <!-- Thoughts content will be inserted here -->
+                    </div>
+                    <small class="text-muted" id="thoughtsUpdated">
+                        <!-- Update date will be inserted here -->
+                    </small>
+                </div>
+                
+                <!-- Edit Mode -->
+                <div id="thoughtsEditMode" style="display: none;">
+                    <form id="modalThoughtsForm" method="POST" action="{{ url_for('update_notes') }}">
+                        <input type="hidden" name="entry_id" id="modalEntryId">
+                        <div class="mb-3">
+                            <textarea class="form-control" name="notes" id="modalThoughtsTextarea" rows="6" 
+                                    placeholder="What insights or reflections does this quote inspire? How does it apply to your life?"></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- View Mode Buttons -->
+                <div id="viewModeButtons">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="editThoughtsBtn">
+                        <i class="fas fa-edit me-1"></i>Edit Thoughts
+                    </button>
+                </div>
+                
+                <!-- Edit Mode Buttons -->
+                <div id="editModeButtons" style="display: none;">
+                    <button type="button" class="btn btn-secondary" id="cancelEditBtn">
+                        <i class="fas fa-times me-1"></i>Cancel
+                    </button>
+                    <button type="button" class="btn btn-success" id="saveEditBtn">
+                        <i class="fas fa-save me-1"></i>Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Confirm Deletion
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this library entry? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" action="{{ url_for('delete_entry') }}" class="d-inline">
+                    <input type="hidden" name="entry_id" id="deleteEntryId">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-1"></i>Delete Entry
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let currentEntryId = null;
+
+function confirmDelete(entryId) {
+    document.getElementById('deleteEntryId').value = entryId;
+    const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    modal.show();
+}
+
+function viewThoughts(entryId) {
+    const entryCard = document.querySelector(`[data-entry-id="${entryId}"]`);
+    const thoughtsSection = entryCard.querySelector('.thoughts-section');
+    const thoughtsContent = thoughtsSection.querySelector('.thoughts-content');
+    const thoughtsUpdated = thoughtsSection.querySelector('.thoughts-updated');
+    
+    // Set the modal content
+    document.getElementById('thoughtsContent').innerText = thoughtsContent ? thoughtsContent.innerText : '';
+    
+    const updatedText = thoughtsUpdated && thoughtsUpdated.innerText.trim() ? 
+        `Last updated: ${thoughtsUpdated.innerText}` : '';
+    document.getElementById('thoughtsUpdated').innerText = updatedText;
+    
+    // Store current entry ID and thoughts text for editing
+    currentEntryId = entryId;
+    document.getElementById('modalEntryId').value = entryId;
+    document.getElementById('modalThoughtsTextarea').value = thoughtsContent ? thoughtsContent.innerText : '';
+    
+    // Ensure we're in view mode
+    switchToViewMode();
+    
+    // Show the modal
+    const modal = new bootstrap.Modal(document.getElementById('thoughtsModal'));
+    modal.show();
+}
+
+function switchToEditMode() {
+    document.getElementById('thoughtsViewMode').style.display = 'none';
+    document.getElementById('thoughtsEditMode').style.display = 'block';
+    document.getElementById('viewModeButtons').style.display = 'none';
+    document.getElementById('editModeButtons').style.display = 'block';
+    
+    // Focus and resize textarea
+    const textarea = document.getElementById('modalThoughtsTextarea');
+    setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.min(textarea.scrollHeight, 300) + 'px';
+    }, 100);
+}
+
+function switchToViewMode() {
+    document.getElementById('thoughtsViewMode').style.display = 'block';
+    document.getElementById('thoughtsEditMode').style.display = 'none';
+    document.getElementById('viewModeButtons').style.display = 'block';
+    document.getElementById('editModeButtons').style.display = 'none';
+    
+    // Reset textarea content from the original thoughts
+    if (currentEntryId) {
+        const entryCard = document.querySelector(`[data-entry-id="${currentEntryId}"]`);
+        const thoughtsContent = entryCard.querySelector('.thoughts-content');
+        document.getElementById('modalThoughtsTextarea').value = thoughtsContent ? thoughtsContent.innerText : '';
+    }
+}
+
+function showThoughtsForm(entryId) {
+    const entryCard = document.querySelector(`[data-entry-id="${entryId}"]`);
+    const thoughtsForm = entryCard.querySelector('.thoughts-form');
+    const quoteActions = entryCard.querySelector('.quote-actions');
+    const thoughtsSection = entryCard.querySelector('.thoughts-section');
+    
+    // Hide the action buttons and existing thoughts display
+    quoteActions.style.display = 'none';
+    if (thoughtsSection) {
+        thoughtsSection.style.display = 'none';
+    }
+    
+    // Show the form
+    thoughtsForm.style.display = 'block';
+    
+    // Focus the textarea
+    const textarea = thoughtsForm.querySelector('textarea');
+    setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+        // Trigger auto-resize
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    }, 100);
+}
+
+function hideThoughtsForm(entryId) {
+    const entryCard = document.querySelector(`[data-entry-id="${entryId}"]`);
+    const thoughtsForm = entryCard.querySelector('.thoughts-form');
+    const quoteActions = entryCard.querySelector('.quote-actions');
+    const thoughtsSection = entryCard.querySelector('.thoughts-section');
+    
+    // Hide the form
+    thoughtsForm.style.display = 'none';
+    
+    // Show the action buttons and existing thoughts display
+    quoteActions.style.display = 'flex';
+    if (thoughtsSection) {
+        thoughtsSection.style.display = 'block';
+    }
+}
+
+// Auto-resize textareas and handle focus
+document.addEventListener('DOMContentLoaded', function() {
+    const textareas = document.querySelectorAll('textarea');
+    textareas.forEach(textarea => {
+        // Auto-resize on input
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+        
+        // Initial resize
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    });
+    
+    // Edit thoughts button functionality
+    document.getElementById('editThoughtsBtn').addEventListener('click', function() {
+        if (currentEntryId) {
+            switchToEditMode();
+        }
+    });
+    
+    // Cancel edit button functionality
+    document.getElementById('cancelEditBtn').addEventListener('click', function() {
+        switchToViewMode();
+    });
+    
+    // Save edit button functionality
+    document.getElementById('saveEditBtn').addEventListener('click', function() {
+        const form = document.getElementById('modalThoughtsForm');
+        form.submit();
+    });
+    
+    // Auto-resize modal textarea
+    const modalTextarea = document.getElementById('modalThoughtsTextarea');
+    modalTextarea.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 300) + 'px';
+    });
+    
+    // Focus on specific entry if requested
+    {% if focus_entry_id %}
+    const focusEntry = document.querySelector('[data-entry-id="{{ focus_entry_id }}"]');
+    if (focusEntry) {
+        // Scroll to the entry and automatically show the thoughts form
+        focusEntry.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => {
+            showThoughtsForm({{ focus_entry_id }});
+        }, 500);
+    }
+    {% endif %}
+});
+</script>
+{% endblock %}

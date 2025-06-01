@@ -26,8 +26,8 @@
                 <a class="nav-btn" href="{{ url_for('index') }}">
                     <i class="fas fa-home me-1"></i>
                 </a>
-                <a class="nav-btn" href="{{ url_for('journal') }}">
-                    <i class="fas fa-book me-1"></i>Journal
+                <a class="nav-btn" href="{{ url_for('library') }}">
+                    <i class="fas fa-book me-1"></i>Library
                 </a>
                 {% if session.admin_authenticated %}
                 <a class="nav-link" href="{{ url_for('admin') }}">

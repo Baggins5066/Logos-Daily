@@ -576,13 +576,13 @@ button:active,
 }
 
 /* ========================================
-   JOURNAL STYLES
+   LIBRARY STYLES
    ======================================== */
-.journal-entry-card {
+.library-entry-card {
     transition: transform 0.2s ease-in-out;
 }
 
-.journal-entry-card:hover {
+.library-entry-card:hover {
     transform: translateY(-2px);
 }
 
