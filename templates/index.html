@@ -40,12 +40,23 @@
                 <!-- Action Buttons -->
                 <div class="quote-actions mt-4">
                     <div class="d-flex justify-content-center align-items-center gap-3">
+                        <!-- Like Button -->
+                        <button type="button" class="likeBtn" title="Like this quote">
+                            <i class="fas fa-thumbs-up icon"></i>
+                        </button>
+                        
+                        <!-- Dislike Button -->
+                        <button type="button" class="dislikeBtn" title="Dislike this quote">
+                            <i class="fas fa-thumbs-down icon"></i>
+                        </button>
+                        
+                        <!-- Save to Journal Button -->
                         {% if not is_saved %}
                         <form method="POST" action="{{ url_for('save_quote') }}" class="d-inline">
                             <input type="hidden" name="quote_id" value="{{ quote.id }}">
                             <button type="submit" class="bookmarkBtn">
                                 <div class="IconContainer">
-                                    <i class="fas fa-heart icon"></i>
+                                    <i class="fas fa-bookmark icon"></i>
                                 </div>
                                 <div class="text">Save to Journal</div>
                             </button>
@@ -58,10 +69,6 @@
                             <div class="text">Saved in Journal</div>
                         </a>
                         {% endif %}
-                        
-                        <button type="button" class="noteBtn" onclick="openThoughtsModal({{ quote.id }})" title="Add thoughts about this quote">
-                            <i class="fas fa-edit icon"></i>
-                        </button>
                     </div>
                 </div>
 
@@ -89,141 +96,44 @@
     </div>
     {% endif %}
 </div>
-<!-- Thoughts Modal -->
-<div class="modal fade" id="thoughtsModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-lightbulb me-2"></i>My Thoughts
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="quote-context mb-4 p-3 bg-dark border rounded">
-                    <blockquote class="blockquote mb-2">
-                        <i class="fas fa-quote-left text-muted me-2"></i>
-                        <span id="modalQuoteText">{{ quote.text if quote else '' }}</span>
-                    </blockquote>
-                    <div class="text-end">
-                        <small class="text-muted">— <span id="modalQuoteAuthor">{{ quote.author if quote else '' }}</span></small>
-                    </div>
-                </div>
-                
-                <form id="thoughtsForm" method="POST" action="{{ url_for('save_quote_and_add_notes') }}">
-                    <input type="hidden" name="quote_id" id="modalQuoteId" value="{{ quote.id if quote else '' }}">
-                    <div class="mb-3">
-                        <label for="thoughtsTextarea" class="form-label">What insights or reflections does this quote inspire?</label>
-                        <textarea class="form-control" name="notes" id="thoughtsTextarea" rows="6" 
-                                placeholder="How does this quote apply to your life? What deeper meanings do you find in it?"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-1"></i>Cancel
-                </button>
-                <button type="button" class="btn btn-success" id="saveThoughtsBtn">
-                    <i class="fas fa-save me-1"></i>Save to Journal
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-function openThoughtsModal(quoteId) {
-    // Get the current quote text and author from the page
-    const quoteTextEl = document.querySelector('.quote-text');
-    const quoteAuthorEl = document.querySelector('.quote-author');
-    
-    if (!quoteTextEl || !quoteAuthorEl) {
-        console.error('Quote elements not found');
-        return;
-    }
-    
-    const quoteText = quoteTextEl.textContent.trim();
-    const quoteAuthor = quoteAuthorEl.textContent.replace('— ', '').trim();
-    
-    // Set the quote ID in the form
-    const modalQuoteId = document.getElementById('modalQuoteId');
-    const modalQuoteText = document.getElementById('modalQuoteText');
-    const modalQuoteAuthor = document.getElementById('modalQuoteAuthor');
-    const thoughtsTextarea = document.getElementById('thoughtsTextarea');
-    
-    if (!modalQuoteId || !modalQuoteText || !modalQuoteAuthor || !thoughtsTextarea) {
-        console.error('Modal elements not found');
-        return;
-    }
-    
-    modalQuoteId.value = quoteId;
-    modalQuoteText.textContent = quoteText;
-    modalQuoteAuthor.textContent = quoteAuthor;
-    thoughtsTextarea.value = '';
-    
-    // Show the modal
-    const modalEl = document.getElementById('thoughtsModal');
-    if (modalEl) {
-        const modal = new bootstrap.Modal(modalEl);
-        modal.show();
-        
-        // Focus the textarea after modal is shown
-        setTimeout(() => {
-            thoughtsTextarea.focus();
-        }, 300);
-    }
-}
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Save thoughts button functionality
-    const saveBtn = document.getElementById('saveThoughtsBtn');
-    if (saveBtn) {
-        saveBtn.addEventListener('click', function() {
-            const form = document.getElementById('thoughtsForm');
-            const textarea = document.getElementById('thoughtsTextarea');
-            
-            if (!form || !textarea) {
-                console.error('Form elements not found');
-                return;
-            }
-            
-            // Check if there's any content
-            if (textarea.value.trim()) {
-                form.submit();
+    // Like button functionality
+    const likeBtn = document.querySelector('.likeBtn');
+    if (likeBtn) {
+        likeBtn.addEventListener('click', function() {
+            // Toggle liked state
+            this.classList.toggle('liked');
+            const icon = this.querySelector('i');
+            if (this.classList.contains('liked')) {
+                icon.className = 'fas fa-thumbs-up icon';
+                this.style.background = 'rgb(40, 167, 69)';
             } else {
-                // If no content, just save the quote without notes
-                const modalQuoteId = document.getElementById('modalQuoteId');
-                if (!modalQuoteId) {
-                    console.error('Modal quote ID not found');
-                    return;
-                }
-                
-                const quoteId = modalQuoteId.value;
-                const saveForm = document.createElement('form');
-                saveForm.method = 'POST';
-                saveForm.action = '{{ url_for("save_quote") }}';
-                
-                const quoteIdInput = document.createElement('input');
-                quoteIdInput.type = 'hidden';
-                quoteIdInput.name = 'quote_id';
-                quoteIdInput.value = quoteId;
-                
-                saveForm.appendChild(quoteIdInput);
-                document.body.appendChild(saveForm);
-                saveForm.submit();
+                icon.className = 'fas fa-thumbs-up icon';
+                this.style.background = '';
             }
         });
     }
     
-    // Auto-resize textarea
-    const textarea = document.getElementById('thoughtsTextarea');
-    if (textarea) {
-        textarea.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = Math.min(this.scrollHeight, 300) + 'px';
+    // Dislike button functionality
+    const dislikeBtn = document.querySelector('.dislikeBtn');
+    if (dislikeBtn) {
+        dislikeBtn.addEventListener('click', function() {
+            // Toggle disliked state
+            this.classList.toggle('disliked');
+            const icon = this.querySelector('i');
+            if (this.classList.contains('disliked')) {
+                icon.className = 'fas fa-thumbs-down icon';
+                this.style.background = 'rgb(220, 53, 69)';
+            } else {
+                icon.className = 'fas fa-thumbs-down icon';
+                this.style.background = '';
+            }
         });
     }
 });

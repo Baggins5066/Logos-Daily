@@ -311,6 +311,40 @@ button:active,
     color: #000 !important;
 }
 
+.likeBtn {
+    border-color: rgb(40, 167, 69);
+    background: transparent;
+    color: rgb(40, 167, 69) !important;
+}
+
+.likeBtn:hover {
+    background: rgb(40, 167, 69);
+    box-shadow: 0 0 30px 5px rgba(40, 167, 69, 0.815);
+    color: #fff !important;
+}
+
+.likeBtn.liked {
+    background: rgb(40, 167, 69) !important;
+    color: #fff !important;
+}
+
+.dislikeBtn {
+    border-color: rgb(220, 53, 69);
+    background: transparent;
+    color: rgb(220, 53, 69) !important;
+}
+
+.dislikeBtn:hover {
+    background: rgb(220, 53, 69);
+    box-shadow: 0 0 30px 5px rgba(220, 53, 69, 0.815);
+    color: #fff !important;
+}
+
+.dislikeBtn.disliked {
+    background: rgb(220, 53, 69) !important;
+    color: #fff !important;
+}
+
 /* Special button sizes */
 .bookmarkBtn {
     width: 185px;
@@ -336,7 +370,9 @@ button:active,
 }
 
 .noteBtn,
-.deleteBtn {
+.deleteBtn,
+.likeBtn,
+.dislikeBtn {
     width: 45px;
     height: 45px;
     border-radius: 50%;
@@ -347,7 +383,9 @@ button:active,
 }
 
 .noteBtn .icon,
-.deleteBtn .icon {
+.deleteBtn .icon,
+.likeBtn .icon,
+.dislikeBtn .icon {
     font-size: 16px;
     line-height: 1;
     margin: 0;
