@@ -136,8 +136,16 @@
 {% block scripts %}
 <script>
 function openThoughtsModal(quoteId) {
+    // Get the current quote text and author from the page
+    const quoteText = document.querySelector('.quote-text').textContent.trim();
+    const quoteAuthor = document.querySelector('.quote-author').textContent.replace('— ', '').trim();
+    
     // Set the quote ID in the form
     document.getElementById('modalQuoteId').value = quoteId;
+    
+    // Populate the modal with the current quote
+    document.getElementById('modalQuoteText').textContent = quoteText;
+    document.getElementById('modalQuoteAuthor').textContent = quoteAuthor;
     
     // Clear any existing text
     document.getElementById('thoughtsTextarea').value = '';
@@ -154,37 +162,42 @@ function openThoughtsModal(quoteId) {
 
 document.addEventListener('DOMContentLoaded', function() {
     // Save thoughts button functionality
-    document.getElementById('saveThoughtsBtn').addEventListener('click', function() {
-        const form = document.getElementById('thoughtsForm');
-        const textarea = document.getElementById('thoughtsTextarea');
-        
-        // Check if there's any content
-        if (textarea.value.trim()) {
-            form.submit();
-        } else {
-            // If no content, just save the quote without notes
-            const quoteId = document.getElementById('modalQuoteId').value;
-            const saveForm = document.createElement('form');
-            saveForm.method = 'POST';
-            saveForm.action = '{{ url_for("save_quote") }}';
+    const saveBtn = document.getElementById('saveThoughtsBtn');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', function() {
+            const form = document.getElementById('thoughtsForm');
+            const textarea = document.getElementById('thoughtsTextarea');
             
-            const quoteIdInput = document.createElement('input');
-            quoteIdInput.type = 'hidden';
-            quoteIdInput.name = 'quote_id';
-            quoteIdInput.value = quoteId;
-            
-            saveForm.appendChild(quoteIdInput);
-            document.body.appendChild(saveForm);
-            saveForm.submit();
-        }
-    });
+            // Check if there's any content
+            if (textarea.value.trim()) {
+                form.submit();
+            } else {
+                // If no content, just save the quote without notes
+                const quoteId = document.getElementById('modalQuoteId').value;
+                const saveForm = document.createElement('form');
+                saveForm.method = 'POST';
+                saveForm.action = '{{ url_for("save_quote") }}';
+                
+                const quoteIdInput = document.createElement('input');
+                quoteIdInput.type = 'hidden';
+                quoteIdInput.name = 'quote_id';
+                quoteIdInput.value = quoteId;
+                
+                saveForm.appendChild(quoteIdInput);
+                document.body.appendChild(saveForm);
+                saveForm.submit();
+            }
+        });
+    }
     
     // Auto-resize textarea
     const textarea = document.getElementById('thoughtsTextarea');
-    textarea.addEventListener('input', function() {
-        this.style.height = 'auto';
-        this.style.height = Math.min(this.scrollHeight, 300) + 'px';
-    });
+    if (textarea) {
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 300) + 'px';
+        });
+    }
 });
 </script>
 {% endblock %}
