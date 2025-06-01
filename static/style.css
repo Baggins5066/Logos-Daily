@@ -660,6 +660,57 @@ button:active,
     padding: 0.4rem 0.6rem;
 }
 
+/* --- Library Grid Responsive Layout --- */
+.library-grid {
+    /* Remove default row margin for tighter fit */
+    margin-left: 0;
+    margin-right: 0;
+}
+.library-grid .col-12 {
+    display: flex;
+}
+.library-entry-card {
+    min-width: 0;
+    width: 100%;
+    min-height: 320px;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+}
+.library-entry-card .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.library-entry-card .card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+@media (max-width: 575.98px) {
+    .library-entry-card {
+        min-height: 0;
+    }
+}
+
+/* Make quote-display fill available space for squarer look */
+.quote-display {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Optional: tighter spacing for grid */
+.library-grid .col-12,
+.library-grid .col-sm-6,
+.library-grid .col-md-4,
+.library-grid .col-lg-3 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
 /* ========================================
    EXPLANATION & CHAT STYLES
    ======================================== */
