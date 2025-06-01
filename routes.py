@@ -1,6 +1,7 @@
 import os
 import tempfile
 from datetime import datetime
+import random
 from flask import render_template, request, redirect, url_for, flash, session, jsonify
 from werkzeug.utils import secure_filename
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -21,7 +22,7 @@ def index():
     # Update user streak
     streak_info = update_streak()
     
-    # Get today's quote
+    # Get today's quote (default logic)
     daily_quote = get_daily_quote()
     
     # Check if user has saved today's quote
@@ -34,10 +35,13 @@ def index():
         ).first()
         is_saved = existing_entry is not None
     
+    now = datetime.now()
+    
     return render_template('index.html', 
                          quote=daily_quote, 
                          streak=streak_info,
-                         is_saved=is_saved)
+                         is_saved=is_saved,
+                         now=now)
 
 @app.route('/save_quote', methods=['POST'])
 def save_quote():
@@ -281,6 +285,41 @@ def admin_upload():
             os.unlink(temp_path)
     
     return redirect(url_for('admin'))
+
+@app.route('/refresh_quote', methods=['POST'])
+def refresh_quote():
+    """Show a random quote (for testing)"""
+    # Pick a random quote from the database
+    from models import Quote
+    quote_ids = [q.id for q in Quote.query.all()]
+    if quote_ids:
+        random_id = random.choice(quote_ids)
+        # Store this random quote in session for display
+        session['daily_quote_id'] = random_id
+    else:
+        session.pop('daily_quote_id', None)
+    return redirect(url_for('show_random_quote'))
+
+@app.route('/show_random_quote')
+def show_random_quote():
+    from models import Quote
+    streak_info = update_streak()
+    random_id = session.get('daily_quote_id')
+    quote = Quote.query.get(random_id) if random_id else None
+    session_id = get_session_id()
+    is_saved = False
+    if quote:
+        existing_entry = JournalEntry.query.filter_by(
+            quote_id=quote.id,
+            user_session_id=session_id
+        ).first()
+        is_saved = existing_entry is not None
+    now = datetime.now()
+    return render_template('index.html', 
+                         quote=quote, 
+                         streak=streak_info,
+                         is_saved=is_saved,
+                         now=now)
 
 @app.template_filter('truncate_words')
 def truncate_words(text, length=50):

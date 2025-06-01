@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container py-5 position-relative" style="min-height: 80vh;">
     <!-- Streak Banner -->
     {% if streak %}
-    <div class="streak-banner">
+    <div class="streak-banner mb-5"><!-- Added mb-5 for extra margin below streak banner -->
         <div class="d-flex align-items-center justify-content-between px-3">
             <div class="d-flex align-items-center">
                 <span class="flame me-2">🔥</span>
@@ -15,9 +15,18 @@
     </div>
     {% endif %}
 
+    <!-- Current Date Header (moved below streak, above quote) -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-6">
+            <div class="date-header text-center mb-4" style="font-size: 1.5rem; font-weight: 700; letter-spacing: 1px; color: #ac46ff;">
+                {{ now.strftime('%A, %B %d, %Y') if now else '' }}
+            </div>
+        </div>
+    </div>
+
     <!-- Daily Quote -->
     {% if quote %}
-    <div class="row justify-content-center mt-5">
+    <div class="row justify-content-center mt-3">
         <div class="col-lg-8 col-xl-6">
             <div class="quote-card">
                 <div class="quote-content">
@@ -44,12 +53,10 @@
                         <button type="button" class="likeBtn" title="Like this quote">
                             <i class="fas fa-thumbs-up icon"></i>
                         </button>
-                        
                         <!-- Dislike Button -->
                         <button type="button" class="dislikeBtn" title="Dislike this quote">
                             <i class="fas fa-thumbs-down icon"></i>
                         </button>
-                        
                         <!-- Save to Journal Button -->
                         {% if not is_saved %}
                         <form method="POST" action="{{ url_for('save_quote') }}" class="d-inline">
@@ -71,8 +78,14 @@
                         {% endif %}
                     </div>
                 </div>
-
-                
+            </div>
+        </div>
+    </div>
+    <!-- New message below the quote -->
+    <div class="row justify-content-center mt-3">
+        <div class="col-lg-8 col-xl-6 text-center">
+            <div class="mt-4 text-muted" style="font-size: 1.1rem;">
+                Come back tomorrow for a new quote!
             </div>
         </div>
     </div>
@@ -95,9 +108,17 @@
         </div>
     </div>
     {% endif %}
+
+    <!-- Refresh Quote Button Fixed to Bottom -->
+    <form method="POST" action="{{ url_for('refresh_quote') }}" class="w-100">
+        <div style="position: fixed; left: 0; right: 0; bottom: 0; z-index: 1050; background: #1a1a1a; border-top: 2px solid #404040; padding: 1rem 0; text-align: center;">
+            <button type="submit" class="btn btn-outline-primary" id="refresh-quote-btn">
+                <i class="fas fa-sync-alt me-1"></i>Refresh Quote
+            </button>
+        </div>
+    </form>
 </div>
 
-</div>
 {% endblock %}
 
 {% block scripts %}
@@ -106,16 +127,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Like button functionality
     const likeBtn = document.querySelector('.likeBtn');
     const dislikeBtn = document.querySelector('.dislikeBtn');
-    
     if (likeBtn) {
         likeBtn.addEventListener('click', function() {
-            // If dislike is active, remove it first
             if (dislikeBtn && dislikeBtn.classList.contains('disliked')) {
                 dislikeBtn.classList.remove('disliked');
                 dislikeBtn.style.background = '';
             }
-            
-            // Toggle liked state
             this.classList.toggle('liked');
             const icon = this.querySelector('i');
             if (this.classList.contains('liked')) {
@@ -127,17 +144,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
-    // Dislike button functionality
     if (dislikeBtn) {
         dislikeBtn.addEventListener('click', function() {
-            // If like is active, remove it first
             if (likeBtn && likeBtn.classList.contains('liked')) {
                 likeBtn.classList.remove('liked');
                 likeBtn.style.background = '';
             }
-            
-            // Toggle disliked state
             this.classList.toggle('disliked');
             const icon = this.querySelector('i');
             if (this.classList.contains('disliked')) {

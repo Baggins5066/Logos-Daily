@@ -114,6 +114,25 @@ body {
     transition: box-shadow 0.2s ease-in;
 }
 
+/* Center nav-btn icon if no text is present (only icon, no text) */
+.nav-btn.icon-only {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 45px;
+    height: 45px;
+    min-width: 45px;
+    min-height: 45px;
+}
+
+.nav-btn.icon-only > i {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    font-size: 1.3rem;
+}
+
 /* ========================================
    BUTTON STYLES
    ======================================== */
