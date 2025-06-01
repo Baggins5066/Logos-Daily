@@ -105,8 +105,16 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Like button functionality
     const likeBtn = document.querySelector('.likeBtn');
+    const dislikeBtn = document.querySelector('.dislikeBtn');
+    
     if (likeBtn) {
         likeBtn.addEventListener('click', function() {
+            // If dislike is active, remove it first
+            if (dislikeBtn && dislikeBtn.classList.contains('disliked')) {
+                dislikeBtn.classList.remove('disliked');
+                dislikeBtn.style.background = '';
+            }
+            
             // Toggle liked state
             this.classList.toggle('liked');
             const icon = this.querySelector('i');
@@ -121,9 +129,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Dislike button functionality
-    const dislikeBtn = document.querySelector('.dislikeBtn');
     if (dislikeBtn) {
         dislikeBtn.addEventListener('click', function() {
+            // If like is active, remove it first
+            if (likeBtn && likeBtn.classList.contains('liked')) {
+                likeBtn.classList.remove('liked');
+                likeBtn.style.background = '';
+            }
+            
             // Toggle disliked state
             this.classList.toggle('disliked');
             const icon = this.querySelector('i');
