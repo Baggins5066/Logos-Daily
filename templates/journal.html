@@ -41,7 +41,7 @@
                                 {% if entry.user_notes and entry.user_notes.strip() %}
                                 <div class="existing-notes mb-3">
                                     <h6 class="mb-2">
-                                        <i class="fas fa-edit me-1"></i>My Reflections
+                                        <i class="fas fa-edit me-1"></i>My thoughts
                                     </h6>
                                     <div class="notes-display p-3 bg-dark border rounded">
                                         {{ entry.user_notes }}
@@ -53,7 +53,7 @@
                                 <form method="POST" action="{{ url_for('update_notes') }}" class="notes-form" style="display: none;">
                                     <input type="hidden" name="entry_id" value="{{ entry.id }}">
                                     <h6 class="mb-3">
-                                        <i class="fas fa-edit me-1"></i>My Reflections
+                                        <i class="fas fa-edit me-1"></i>My thoughts
                                     </h6>
                                     <div class="mb-3">
                                         <textarea class="form-control" name="notes" rows="4" 
