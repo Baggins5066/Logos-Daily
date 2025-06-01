@@ -473,6 +473,17 @@ button:active,
     text-align: center;
 }
 
+.quote-actions {
+    text-align: center;
+    width: 100%;
+}
+
+.quote-actions .d-flex {
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100%;
+}
+
 .quote-icon {
     font-size: 2rem;
     color: #ac46ff;
