@@ -125,18 +125,45 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <div id="thoughtsContent" class="thoughts-display p-3 bg-dark border rounded mb-3">
-                    <!-- Thoughts content will be inserted here -->
+                <!-- View Mode -->
+                <div id="thoughtsViewMode">
+                    <div id="thoughtsContent" class="thoughts-display p-3 bg-dark border rounded mb-3">
+                        <!-- Thoughts content will be inserted here -->
+                    </div>
+                    <small class="text-muted" id="thoughtsUpdated">
+                        <!-- Update date will be inserted here -->
+                    </small>
                 </div>
-                <small class="text-muted" id="thoughtsUpdated">
-                    <!-- Update date will be inserted here -->
-                </small>
+                
+                <!-- Edit Mode -->
+                <div id="thoughtsEditMode" style="display: none;">
+                    <form id="modalThoughtsForm" method="POST" action="{{ url_for('update_notes') }}">
+                        <input type="hidden" name="entry_id" id="modalEntryId">
+                        <div class="mb-3">
+                            <textarea class="form-control" name="notes" id="modalThoughtsTextarea" rows="6" 
+                                    placeholder="What insights or reflections does this quote inspire? How does it apply to your life?"></textarea>
+                        </div>
+                    </form>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="editThoughtsBtn">
-                    <i class="fas fa-edit me-1"></i>Edit Thoughts
-                </button>
+                <!-- View Mode Buttons -->
+                <div id="viewModeButtons">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="editThoughtsBtn">
+                        <i class="fas fa-edit me-1"></i>Edit Thoughts
+                    </button>
+                </div>
+                
+                <!-- Edit Mode Buttons -->
+                <div id="editModeButtons" style="display: none;">
+                    <button type="button" class="btn btn-secondary" id="cancelEditBtn">
+                        <i class="fas fa-times me-1"></i>Cancel
+                    </button>
+                    <button type="button" class="btn btn-success" id="saveEditBtn">
+                        <i class="fas fa-save me-1"></i>Save Changes
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -192,12 +219,47 @@ function viewThoughts(entryId) {
         `Last updated: ${thoughtsUpdated.innerText}` : '';
     document.getElementById('thoughtsUpdated').innerText = updatedText;
     
-    // Store current entry ID for edit button
+    // Store current entry ID and thoughts text for editing
     currentEntryId = entryId;
+    document.getElementById('modalEntryId').value = entryId;
+    document.getElementById('modalThoughtsTextarea').value = thoughtsContent ? thoughtsContent.innerText : '';
+    
+    // Ensure we're in view mode
+    switchToViewMode();
     
     // Show the modal
     const modal = new bootstrap.Modal(document.getElementById('thoughtsModal'));
     modal.show();
+}
+
+function switchToEditMode() {
+    document.getElementById('thoughtsViewMode').style.display = 'none';
+    document.getElementById('thoughtsEditMode').style.display = 'block';
+    document.getElementById('viewModeButtons').style.display = 'none';
+    document.getElementById('editModeButtons').style.display = 'block';
+    
+    // Focus and resize textarea
+    const textarea = document.getElementById('modalThoughtsTextarea');
+    setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.min(textarea.scrollHeight, 300) + 'px';
+    }, 100);
+}
+
+function switchToViewMode() {
+    document.getElementById('thoughtsViewMode').style.display = 'block';
+    document.getElementById('thoughtsEditMode').style.display = 'none';
+    document.getElementById('viewModeButtons').style.display = 'block';
+    document.getElementById('editModeButtons').style.display = 'none';
+    
+    // Reset textarea content from the original thoughts
+    if (currentEntryId) {
+        const entryCard = document.querySelector(`[data-entry-id="${currentEntryId}"]`);
+        const thoughtsContent = entryCard.querySelector('.thoughts-content');
+        document.getElementById('modalThoughtsTextarea').value = thoughtsContent ? thoughtsContent.innerText : '';
+    }
 }
 
 function showThoughtsForm(entryId) {
@@ -260,15 +322,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // Edit thoughts button functionality
     document.getElementById('editThoughtsBtn').addEventListener('click', function() {
         if (currentEntryId) {
-            // Close the modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('thoughtsModal'));
-            modal.hide();
-            
-            // Show the thoughts form
-            setTimeout(() => {
-                showThoughtsForm(currentEntryId);
-            }, 300);
+            switchToEditMode();
         }
+    });
+    
+    // Cancel edit button functionality
+    document.getElementById('cancelEditBtn').addEventListener('click', function() {
+        switchToViewMode();
+    });
+    
+    // Save edit button functionality
+    document.getElementById('saveEditBtn').addEventListener('click', function() {
+        const form = document.getElementById('modalThoughtsForm');
+        form.submit();
+    });
+    
+    // Auto-resize modal textarea
+    const modalTextarea = document.getElementById('modalThoughtsTextarea');
+    modalTextarea.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 300) + 'px';
     });
     
     // Focus on specific entry if requested
