@@ -43,7 +43,7 @@
                                         Saved on {{ entry.created_at.strftime('%B %d, %Y') }}
                                     </small>
                                     
-                                    <div class="quote-actions d-flex gap-2">
+                                    <div class="quote-actions d-flex gap-2 justify-content-end">
                                         {% if entry.user_notes and entry.user_notes.strip() %}
                                         <button type="button" class="noteBtn" onclick="viewThoughts({{ entry.id }})" 
                                                 title="View your thoughts about this quote">
