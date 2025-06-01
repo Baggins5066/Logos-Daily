@@ -107,6 +107,30 @@ body {
 /* ========================================
    BUTTON STYLES
    ======================================== */
+
+/* Icon alignment fixes */
+.btn i,
+button i,
+.bookmarkBtn i,
+.noteBtn i,
+.deleteBtn i,
+.saveBtn i,
+.cancelBtn i {
+    line-height: 1;
+    vertical-align: middle;
+}
+
+/* Text alignment for button text */
+.btn .text,
+button .text,
+.bookmarkBtn .text,
+.saveBtn .text,
+.cancelBtn .text {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
 /* Universal Button Base Style */
 .btn,
 button,
@@ -277,11 +301,13 @@ button:active,
 .noteBtn {
     border-color: rgb(255, 193, 7);
     background: rgb(255, 193, 7);
+    color: #000 !important;
 }
 
 .noteBtn:hover {
     background: rgb(255, 193, 7);
     box-shadow: 0 0 30px 5px rgba(255, 193, 7, 0.815);
+    color: #000 !important;
 }
 
 /* Special button sizes */
@@ -293,6 +319,19 @@ button:active,
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
+}
+
+.bookmarkBtn .IconContainer,
+.bookmarkBtn .text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bookmarkBtn .icon {
+    font-size: 16px;
+    line-height: 1;
 }
 
 .noteBtn,
@@ -306,6 +345,13 @@ button:active,
     justify-content: center;
 }
 
+.noteBtn .icon,
+.deleteBtn .icon {
+    font-size: 16px;
+    line-height: 1;
+    margin: 0;
+}
+
 .saveBtn,
 .cancelBtn {
     width: 180px;
@@ -315,17 +361,35 @@ button:active,
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
+}
+
+.saveBtn .IconContainer,
+.saveBtn .text,
+.cancelBtn .IconContainer,
+.cancelBtn .text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.saveBtn .icon,
+.cancelBtn .icon {
+    font-size: 14px;
+    line-height: 1;
 }
 
 /* Special States */
 .bookmarkBtn.saved {
     border-color: rgba(144, 238, 144, 0.5);
     background: rgb(144, 238, 144);
+    color: #000 !important;
 }
 
 .bookmarkBtn.saved:hover {
     background: rgb(144, 238, 144);
     box-shadow: 0 0 30px 5px rgba(144, 238, 144, 0.815);
+    color: #000 !important;
 }
 
 .accordion-button:not(.collapsed) {
