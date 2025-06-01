@@ -59,12 +59,9 @@
                         </a>
                         {% endif %}
                         
-                        <form method="POST" action="{{ url_for('save_quote_and_redirect') }}" class="d-inline">
-                            <input type="hidden" name="quote_id" value="{{ quote.id }}">
-                            <button type="submit" class="noteBtn">
-                                <i class="fas fa-edit icon"></i>
-                            </button>
-                        </form>
+                        <button type="button" class="noteBtn" onclick="openThoughtsModal({{ quote.id }})" title="Add thoughts about this quote">
+                            <i class="fas fa-edit icon"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -94,5 +91,100 @@
 </div>
 {% endblock %}
 
+<!-- Thoughts Modal -->
+<div class="modal fade" id="thoughtsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-lightbulb me-2"></i>My Thoughts
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="quote-context mb-4 p-3 bg-dark border rounded">
+                    <blockquote class="blockquote mb-2">
+                        <i class="fas fa-quote-left text-muted me-2"></i>
+                        <span id="modalQuoteText">{{ quote.text if quote else '' }}</span>
+                    </blockquote>
+                    <div class="text-end">
+                        <small class="text-muted">— <span id="modalQuoteAuthor">{{ quote.author if quote else '' }}</span></small>
+                    </div>
+                </div>
+                
+                <form id="thoughtsForm" method="POST" action="{{ url_for('save_quote_and_add_notes') }}">
+                    <input type="hidden" name="quote_id" id="modalQuoteId" value="{{ quote.id if quote else '' }}">
+                    <div class="mb-3">
+                        <label for="thoughtsTextarea" class="form-label">What insights or reflections does this quote inspire?</label>
+                        <textarea class="form-control" name="notes" id="thoughtsTextarea" rows="6" 
+                                placeholder="How does this quote apply to your life? What deeper meanings do you find in it?"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cancel
+                </button>
+                <button type="button" class="btn btn-success" id="saveThoughtsBtn">
+                    <i class="fas fa-save me-1"></i>Save to Journal
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% block scripts %}
+<script>
+function openThoughtsModal(quoteId) {
+    // Set the quote ID in the form
+    document.getElementById('modalQuoteId').value = quoteId;
+    
+    // Clear any existing text
+    document.getElementById('thoughtsTextarea').value = '';
+    
+    // Show the modal
+    const modal = new bootstrap.Modal(document.getElementById('thoughtsModal'));
+    modal.show();
+    
+    // Focus the textarea after modal is shown
+    setTimeout(() => {
+        document.getElementById('thoughtsTextarea').focus();
+    }, 300);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Save thoughts button functionality
+    document.getElementById('saveThoughtsBtn').addEventListener('click', function() {
+        const form = document.getElementById('thoughtsForm');
+        const textarea = document.getElementById('thoughtsTextarea');
+        
+        // Check if there's any content
+        if (textarea.value.trim()) {
+            form.submit();
+        } else {
+            // If no content, just save the quote without notes
+            const quoteId = document.getElementById('modalQuoteId').value;
+            const saveForm = document.createElement('form');
+            saveForm.method = 'POST';
+            saveForm.action = '{{ url_for("save_quote") }}';
+            
+            const quoteIdInput = document.createElement('input');
+            quoteIdInput.type = 'hidden';
+            quoteIdInput.name = 'quote_id';
+            quoteIdInput.value = quoteId;
+            
+            saveForm.appendChild(quoteIdInput);
+            document.body.appendChild(saveForm);
+            saveForm.submit();
+        }
+    });
+    
+    // Auto-resize textarea
+    const textarea = document.getElementById('thoughtsTextarea');
+    textarea.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 300) + 'px';
+    });
+});
+</script>
 {% endblock %}

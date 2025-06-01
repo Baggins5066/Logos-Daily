@@ -103,6 +103,44 @@ def save_quote_and_redirect():
     # Redirect to journal with focus parameter
     return redirect(url_for('journal', focus_entry=entry_id))
 
+@app.route('/save_quote_and_add_notes', methods=['POST'])
+def save_quote_and_add_notes():
+    """Save the daily quote to user's journal with notes and redirect to journal"""
+    quote_id = request.form.get('quote_id')
+    notes = request.form.get('notes', '').strip()
+    
+    if not quote_id:
+        flash('No quote specified', 'error')
+        return redirect(url_for('index'))
+    
+    session_id = get_session_id()
+    
+    # Check if already saved
+    existing_entry = JournalEntry.query.filter_by(
+        quote_id=quote_id,
+        user_session_id=session_id
+    ).first()
+    
+    if not existing_entry:
+        # Create new journal entry
+        journal_entry = JournalEntry(
+            quote_id=quote_id,
+            user_session_id=session_id,
+            user_notes=notes
+        )
+        db.session.add(journal_entry)
+        db.session.commit()
+        flash('Quote and thoughts saved to your journal!', 'success')
+    else:
+        # Update existing entry with notes
+        existing_entry.user_notes = notes
+        existing_entry.updated_at = datetime.utcnow()
+        db.session.commit()
+        flash('Your thoughts have been updated!', 'success')
+    
+    # Redirect to journal
+    return redirect(url_for('journal'))
+
 @app.route('/journal')
 def journal():
     """Display user's journal with saved quotes"""
