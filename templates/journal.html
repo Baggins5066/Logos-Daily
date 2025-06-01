@@ -95,7 +95,7 @@
                                         Last updated: {{ entry.updated_at.strftime('%B %d, %Y') }}
                                         {% endif %}
                                     </small>
-                                    <div class="d-flex gap-2">
+                                    <div class="d-flex gap-2 action-buttons">
                                         <button type="button" class="noteBtn" onclick="showNotesForm({{ entry.id }})" 
                                                 title="{% if entry.user_notes and entry.user_notes.strip() %}Edit thoughts{% else %}Add thoughts{% endif %}">
                                             <i class="fas fa-edit icon"></i>
@@ -166,10 +166,11 @@ function showNotesForm(entryId) {
     const entryCard = document.querySelector(`[data-entry-id="${entryId}"]`);
     const notesForm = entryCard.querySelector('.notes-form');
     const notesActions = entryCard.querySelector('.notes-actions');
+    const actionButtons = entryCard.querySelector('.action-buttons');
     const existingNotes = entryCard.querySelector('.existing-notes');
     
     // Hide the action buttons and existing notes display
-    notesActions.style.display = 'none';
+    actionButtons.style.display = 'none';
     if (existingNotes) {
         existingNotes.style.display = 'none';
     }
@@ -192,13 +193,14 @@ function hideNotesForm(entryId) {
     const entryCard = document.querySelector(`[data-entry-id="${entryId}"]`);
     const notesForm = entryCard.querySelector('.notes-form');
     const notesActions = entryCard.querySelector('.notes-actions');
+    const actionButtons = entryCard.querySelector('.action-buttons');
     const existingNotes = entryCard.querySelector('.existing-notes');
     
     // Hide the form
     notesForm.style.display = 'none';
     
     // Show the action buttons and existing notes display
-    notesActions.style.display = 'flex';
+    actionButtons.style.display = 'flex';
     if (existingNotes) {
         existingNotes.style.display = 'block';
     }
