@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block title %}My Journal - PhiloQuote{% endblock %}
@@ -17,96 +18,87 @@
                 <div class="journal-entry-card mb-4" data-entry-id="{{ entry.id }}">
                     <div class="card">
                         <div class="card-body">
-                            <!-- Quote Section -->
-                            <div class="quote-section mb-3">
-                                <blockquote class="blockquote mb-2">
+                            <!-- Quote Display -->
+                            <div class="quote-display">
+                                <blockquote class="blockquote mb-3">
                                     <i class="fas fa-quote-left text-muted me-2"></i>
                                     {{ entry.quote.text }}
                                 </blockquote>
-                                <div class="quote-author text-end">
+                                
+                                <div class="quote-author mb-3">
                                     — {{ entry.quote.author }}
                                 </div>
+                                
                                 {% if entry.quote.tags %}
-                                <div class="quote-tags mt-2">
+                                <div class="quote-tags mb-3">
                                     {% for tag in entry.quote.tags.split(',') %}
                                     <span class="badge bg-secondary me-1">{{ tag.strip() }}</span>
                                     {% endfor %}
                                 </div>
                                 {% endif %}
-                            </div>
-
-                            <!-- Notes Section -->
-                            <div class="notes-section">
-                                <!-- Show existing notes if they exist -->
-                                {% if entry.user_notes and entry.user_notes.strip() %}
-                                <div class="existing-notes mb-3">
-                                    <h6 class="mb-2">
-                                        <i class="fas fa-edit me-1"></i>My thoughts
-                                    </h6>
-                                    <div class="notes-display p-3 bg-dark border rounded">
-                                        {{ entry.user_notes }}
-                                    </div>
-                                </div>
-                                {% endif %}
                                 
-                                <!-- Notes form (hidden by default) -->
-                                <form method="POST" action="{{ url_for('update_notes') }}" class="notes-form" style="display: none;">
-                                    <input type="hidden" name="entry_id" value="{{ entry.id }}">
-                                    <h6 class="mb-3">
-                                        <i class="fas fa-edit me-1"></i>My thoughts
-                                    </h6>
-                                    <div class="mb-3">
-                                        <textarea class="form-control" name="notes" rows="4" 
-                                                placeholder="Write your thoughts, reflections, or insights about this quote...">{{ entry.user_notes or '' }}</textarea>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <small class="text-muted">
-                                            <i class="fas fa-calendar me-1"></i>
-                                            Saved on {{ entry.created_at.strftime('%B %d, %Y') }}
-                                            {% if entry.updated_at.date() != entry.created_at.date() %}
-                                            <br><i class="fas fa-edit me-1"></i>
-                                            Last updated: {{ entry.updated_at.strftime('%B %d, %Y') }}
-                                            {% endif %}
-                                        </small>
-                                        <div class="d-flex flex-column gap-2">
-                                            <button type="submit" class="saveBtn">
-                                                <div class="IconContainer">
-                                                    <i class="fas fa-save icon"></i>
-                                                </div>
-                                                <p class="text">Save thoughts</p>
-                                            </button>
-                                            <button type="button" class="cancelBtn" onclick="hideNotesForm({{ entry.id }})">
-                                                <div class="IconContainer">
-                                                    <i class="fas fa-times icon"></i>
-                                                </div>
-                                                <p class="text">Cancel</p>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                                
-                                <!-- Action buttons -->
-                                <div class="notes-actions d-flex justify-content-between align-items-center">
+                                <div class="quote-meta d-flex justify-content-between align-items-center">
                                     <small class="text-muted">
                                         <i class="fas fa-calendar me-1"></i>
                                         Saved on {{ entry.created_at.strftime('%B %d, %Y') }}
-                                        {% if entry.updated_at.date() != entry.created_at.date() %}
-                                        <br><i class="fas fa-edit me-1"></i>
-                                        Last updated: {{ entry.updated_at.strftime('%B %d, %Y') }}
-                                        {% endif %}
                                     </small>
-                                    <div class="d-flex gap-2 action-buttons">
-                                        <button type="button" class="noteBtn" onclick="showNotesForm({{ entry.id }})" 
-                                                title="{% if entry.user_notes and entry.user_notes.strip() %}Edit thoughts{% else %}Add thoughts{% endif %}">
+                                    
+                                    <div class="quote-actions d-flex gap-2">
+                                        <button type="button" class="noteBtn" onclick="showThoughtsForm({{ entry.id }})" 
+                                                title="Add thoughts about this quote">
                                             <i class="fas fa-edit icon"></i>
                                         </button>
                                         <button type="button" class="deleteBtn" 
-                                                onclick="confirmDelete({{ entry.id }})" title="Delete quote">
+                                                onclick="confirmDelete({{ entry.id }})" title="Delete this quote">
                                             <i class="fas fa-trash icon"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Thoughts Section -->
+                            {% if entry.user_notes and entry.user_notes.strip() %}
+                            <div class="thoughts-section mt-4 pt-3" style="border-top: 1px solid var(--bs-border-color);">
+                                <h6 class="mb-2">
+                                    <i class="fas fa-lightbulb me-1"></i>My Thoughts
+                                </h6>
+                                <div class="thoughts-display p-3 bg-dark border rounded">
+                                    {{ entry.user_notes }}
+                                </div>
+                                <small class="text-muted d-block mt-2">
+                                    {% if entry.updated_at.date() != entry.created_at.date() %}
+                                    <i class="fas fa-edit me-1"></i>
+                                    Last updated: {{ entry.updated_at.strftime('%B %d, %Y') }}
+                                    {% endif %}
+                                </small>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Thoughts Form (hidden by default) -->
+                            <form method="POST" action="{{ url_for('update_notes') }}" class="thoughts-form mt-4 pt-3" style="display: none; border-top: 1px solid var(--bs-border-color);">
+                                <input type="hidden" name="entry_id" value="{{ entry.id }}">
+                                <h6 class="mb-3">
+                                    <i class="fas fa-lightbulb me-1"></i>My Thoughts
+                                </h6>
+                                <div class="mb-3">
+                                    <textarea class="form-control" name="notes" rows="4" 
+                                            placeholder="What insights or reflections does this quote inspire? How does it apply to your life?">{{ entry.user_notes or '' }}</textarea>
+                                </div>
+                                <div class="d-flex justify-content-end gap-2">
+                                    <button type="button" class="cancelBtn" onclick="hideThoughtsForm({{ entry.id }})">
+                                        <div class="IconContainer">
+                                            <i class="fas fa-times icon"></i>
+                                        </div>
+                                        <p class="text">Cancel</p>
+                                    </button>
+                                    <button type="submit" class="saveBtn">
+                                        <div class="IconContainer">
+                                            <i class="fas fa-save icon"></i>
+                                        </div>
+                                        <p class="text">Save Thoughts</p>
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -162,23 +154,23 @@ function confirmDelete(entryId) {
     modal.show();
 }
 
-function showNotesForm(entryId) {
+function showThoughtsForm(entryId) {
     const entryCard = document.querySelector(`[data-entry-id="${entryId}"]`);
-    const notesForm = entryCard.querySelector('.notes-form');
-    const notesActions = entryCard.querySelector('.notes-actions');
-    const existingNotes = entryCard.querySelector('.existing-notes');
+    const thoughtsForm = entryCard.querySelector('.thoughts-form');
+    const quoteActions = entryCard.querySelector('.quote-actions');
+    const thoughtsSection = entryCard.querySelector('.thoughts-section');
     
-    // Hide the entire notes-actions section and existing notes display
-    notesActions.style.display = 'none';
-    if (existingNotes) {
-        existingNotes.style.display = 'none';
+    // Hide the action buttons and existing thoughts display
+    quoteActions.style.display = 'none';
+    if (thoughtsSection) {
+        thoughtsSection.style.display = 'none';
     }
     
     // Show the form
-    notesForm.style.display = 'block';
+    thoughtsForm.style.display = 'block';
     
     // Focus the textarea
-    const textarea = notesForm.querySelector('textarea');
+    const textarea = thoughtsForm.querySelector('textarea');
     setTimeout(() => {
         textarea.focus();
         textarea.setSelectionRange(textarea.value.length, textarea.value.length);
@@ -188,19 +180,19 @@ function showNotesForm(entryId) {
     }, 100);
 }
 
-function hideNotesForm(entryId) {
+function hideThoughtsForm(entryId) {
     const entryCard = document.querySelector(`[data-entry-id="${entryId}"]`);
-    const notesForm = entryCard.querySelector('.notes-form');
-    const notesActions = entryCard.querySelector('.notes-actions');
-    const existingNotes = entryCard.querySelector('.existing-notes');
+    const thoughtsForm = entryCard.querySelector('.thoughts-form');
+    const quoteActions = entryCard.querySelector('.quote-actions');
+    const thoughtsSection = entryCard.querySelector('.thoughts-section');
     
     // Hide the form
-    notesForm.style.display = 'none';
+    thoughtsForm.style.display = 'none';
     
-    // Show the notes-actions section and existing notes display
-    notesActions.style.display = 'flex';
-    if (existingNotes) {
-        existingNotes.style.display = 'block';
+    // Show the action buttons and existing thoughts display
+    quoteActions.style.display = 'flex';
+    if (thoughtsSection) {
+        thoughtsSection.style.display = 'block';
     }
 }
 
@@ -223,10 +215,10 @@ document.addEventListener('DOMContentLoaded', function() {
     {% if focus_entry_id %}
     const focusEntry = document.querySelector('[data-entry-id="{{ focus_entry_id }}"]');
     if (focusEntry) {
-        // Scroll to the entry and automatically show the notes form
+        // Scroll to the entry and automatically show the thoughts form
         focusEntry.scrollIntoView({ behavior: 'smooth', block: 'center' });
         setTimeout(() => {
-            showNotesForm({{ focus_entry_id }});
+            showThoughtsForm({{ focus_entry_id }});
         }, 500);
     }
     {% endif %}
