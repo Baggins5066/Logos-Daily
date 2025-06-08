@@ -24,68 +24,68 @@
         </div>
     </div>
 
-    <!-- Daily Quote -->
+    <!-- Daily Quote Reveal Section -->
     {% if quote %}
     <div class="row justify-content-center mt-3">
         <div class="col-lg-8 col-xl-6">
-            <div class="quote-card">
-                <div class="quote-content">
-                    <i class="fas fa-quote-left quote-icon"></i>
-                    <blockquote class="quote-text">
-                        {{ quote.text }}
-                    </blockquote>
-                    <div class="quote-author">
-                        — {{ quote.author }}
-                    </div>
-                    {% if quote.tags %}
-                    <div class="quote-tags mt-3">
-                        {% for tag in quote.tags.split(',') %}
-                        <span class="badge bg-secondary me-1">{{ tag.strip() }}</span>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="quote-actions mt-4">
-                    <div class="d-flex justify-content-center align-items-center flex-wrap" style="gap: 1rem;">
-                        <!-- Like Button -->
-                        <button type="button" class="likeBtn" title="Like this quote">
-                            <i class="fas fa-thumbs-up icon"></i>
-                        </button>
-                        <!-- Dislike Button -->
-                        <button type="button" class="dislikeBtn" title="Dislike this quote">
-                            <i class="fas fa-thumbs-down icon"></i>
-                        </button>
-                        <!-- Save to Journal Button -->
-                        {% if not is_saved %}
-                        <form method="POST" action="{{ url_for('save_quote') }}" class="d-inline">
-                            <input type="hidden" name="quote_id" value="{{ quote.id }}">
-                            <button type="submit" class="bookmarkBtn">
-                                <div class="IconContainer">
-                                    <i class="fas fa-bookmark icon"></i>
-                                </div>
-                                <div class="text">Save to Library</div>
-                            </button>
-                        </form>
-                        {% else %}
-                        <a href="{{ url_for('library') }}" class="bookmarkBtn saved">
-                            <div class="IconContainer">
-                                <i class="fas fa-check icon"></i>
-                            </div>
-                            <div class="text">Saved in Library</div>
-                        </a>
+            <div id="quote-reveal-container">
+                <button id="reveal-quote-btn" class="btn btn-primary btn-lg w-100 mb-4" style="font-size:1.3rem;letter-spacing:2px;">
+                    <i class="fas fa-eye me-2"></i>Reveal Today's Quote
+                </button>
+                <div id="quote-card-animated" class="quote-card animated-hidden">
+                    <div class="quote-content">
+                        <i class="fas fa-quote-left quote-icon"></i>
+                        <blockquote class="quote-text">
+                            {{ quote.text }}
+                        </blockquote>
+                        <div class="quote-author">
+                            — {{ quote.author }}
+                        </div>
+                        {% if quote.tags %}
+                        <div class="quote-tags mt-3">
+                            {% for tag in quote.tags.split(',') %}
+                            <span class="badge bg-secondary me-1">{{ tag.strip() }}</span>
+                            {% endfor %}
+                        </div>
                         {% endif %}
                     </div>
+
+                    <!-- Action Buttons -->
+                    <div class="quote-actions mt-4">
+                        <div class="d-flex justify-content-center align-items-center flex-wrap" style="gap: 1rem;">
+                            <!-- Like Button -->
+                            <button type="button" class="likeBtn" title="Like this quote">
+                                <i class="fas fa-thumbs-up icon"></i>
+                            </button>
+                            <!-- Dislike Button -->
+                            <button type="button" class="dislikeBtn" title="Dislike this quote">
+                                <i class="fas fa-thumbs-down icon"></i>
+                            </button>
+                            <!-- Save to Journal Button -->
+                            {% if not is_saved %}
+                            <form method="POST" action="{{ url_for('save_quote') }}" class="d-inline">
+                                <input type="hidden" name="quote_id" value="{{ quote.id }}">
+                                <button type="submit" class="bookmarkBtn">
+                                    <div class="IconContainer">
+                                        <i class="fas fa-bookmark icon"></i>
+                                    </div>
+                                    <div class="text">Save to Library</div>
+                                </button>
+                            </form>
+                            {% else %}
+                            <a href="{{ url_for('library') }}" class="bookmarkBtn saved">
+                                <div class="IconContainer">
+                                    <i class="fas fa-check icon"></i>
+                                </div>
+                                <div class="text">Saved in Library</div>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <!-- New message below the quote -->
-    <div class="row justify-content-center mt-3">
-        <div class="col-lg-8 col-xl-6 text-center">
-            <div class="mt-4 text-muted" style="font-size: 1.1rem;">
-                Come back tomorrow for a new quote!
+                <div id="after-quote-message" class="mt-4 text-muted text-center" style="font-size: 1.1rem; display: none;">
+                    Come back tomorrow for a new quote!
+                </div>
             </div>
         </div>
     </div>
@@ -124,6 +124,23 @@
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Quote reveal logic
+    const revealBtn = document.getElementById('reveal-quote-btn');
+    const quoteCard = document.getElementById('quote-card-animated');
+    const afterQuoteMsg = document.getElementById('after-quote-message');
+    if (revealBtn && quoteCard) {
+        quoteCard.style.display = 'none';
+        if (afterQuoteMsg) afterQuoteMsg.style.display = 'none';
+        revealBtn.addEventListener('click', function() {
+            revealBtn.style.display = 'none';
+            quoteCard.style.display = 'block';
+            setTimeout(() => {
+                quoteCard.classList.remove('animated-hidden');
+                quoteCard.classList.add('animated-reveal');
+                if (afterQuoteMsg) afterQuoteMsg.style.display = 'block';
+            }, 50);
+        });
+    }
     // Like button functionality
     const likeBtn = document.querySelector('.likeBtn');
     const dislikeBtn = document.querySelector('.dislikeBtn');
