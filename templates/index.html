@@ -128,36 +128,58 @@ document.addEventListener('DOMContentLoaded', function() {
     const revealBtn = document.getElementById('reveal-quote-btn');
     const quoteCard = document.getElementById('quote-card-animated');
     const afterQuoteMsg = document.getElementById('after-quote-message');
-    if (revealBtn && quoteCard) {
-        quoteCard.style.display = 'none';
-        if (afterQuoteMsg) afterQuoteMsg.style.display = 'none';
-        revealBtn.addEventListener('click', function() {
-            revealBtn.style.display = 'none';
+    // --- Persistent reveal logic ---
+    const todayKey = 'quoteRevealed_' + (new Date()).toISOString().slice(0,10); // e.g. 2025-06-09
+    function revealQuoteCard() {
+        if (revealBtn) revealBtn.style.display = 'none';
+        if (quoteCard) {
             quoteCard.style.display = 'block';
             setTimeout(() => {
                 quoteCard.classList.remove('animated-hidden');
                 quoteCard.classList.add('animated-reveal');
                 if (afterQuoteMsg) afterQuoteMsg.style.display = 'block';
             }, 50);
+        }
+    }
+    if (localStorage.getItem(todayKey)) {
+        revealQuoteCard();
+    } else if (revealBtn && quoteCard) {
+        quoteCard.style.display = 'none';
+        if (afterQuoteMsg) afterQuoteMsg.style.display = 'none';
+        revealBtn.addEventListener('click', function() {
+            localStorage.setItem(todayKey, '1');
+            revealQuoteCard();
         });
     }
-    // Like button functionality
-    const likeBtn = document.querySelector('.likeBtn');
-    const dislikeBtn = document.querySelector('.dislikeBtn');
+    // Like/dislike persistence logic
+    const likeKey = 'quoteLike_' + (new Date()).toISOString().slice(0,10);
+    const dislikeKey = 'quoteDislike_' + (new Date()).toISOString().slice(0,10);
+    // Restore like/dislike state
+    if (likeBtn && localStorage.getItem(likeKey) === '1') {
+        likeBtn.classList.add('liked');
+        likeBtn.style.background = 'rgb(40, 167, 69)';
+    }
+    if (dislikeBtn && localStorage.getItem(dislikeKey) === '1') {
+        dislikeBtn.classList.add('disliked');
+        dislikeBtn.style.background = 'rgb(220, 53, 69)';
+    }
     if (likeBtn) {
         likeBtn.addEventListener('click', function() {
             if (dislikeBtn && dislikeBtn.classList.contains('disliked')) {
                 dislikeBtn.classList.remove('disliked');
                 dislikeBtn.style.background = '';
+                localStorage.removeItem(dislikeKey);
             }
             this.classList.toggle('liked');
             const icon = this.querySelector('i');
             if (this.classList.contains('liked')) {
                 icon.className = 'fas fa-thumbs-up icon';
                 this.style.background = 'rgb(40, 167, 69)';
+                localStorage.setItem(likeKey, '1');
             } else {
                 icon.className = 'fas fa-thumbs-up icon';
                 this.style.background = '';
+                localStorage.removeItem(likeKey);
             }
         });
     }
@@ -166,15 +188,18 @@ document.addEventListener('DOMContentLoaded', function() {
             if (likeBtn && likeBtn.classList.contains('liked')) {
                 likeBtn.classList.remove('liked');
                 likeBtn.style.background = '';
+                localStorage.removeItem(likeKey);
             }
             this.classList.toggle('disliked');
             const icon = this.querySelector('i');
             if (this.classList.contains('disliked')) {
                 icon.className = 'fas fa-thumbs-down icon';
                 this.style.background = 'rgb(220, 53, 69)';
+                localStorage.setItem(dislikeKey, '1');
             } else {
                 icon.className = 'fas fa-thumbs-down icon';
                 this.style.background = '';
+                localStorage.removeItem(dislikeKey);
             }
         });
     }
