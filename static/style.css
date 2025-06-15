@@ -433,6 +433,23 @@ button:active,
     min-width: fit-content;
 }
 
+/* Circle Button Style for Share Button */
+.circle-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circle-btn .icon {
+    font-size: 16px;
+    line-height: 1;
+    margin: 0;
+}
+
 /* Special States */
 .bookmarkBtn.saved {
     border-color: rgba(144, 238, 144, 0.5);

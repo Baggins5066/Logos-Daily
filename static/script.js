@@ -145,6 +145,30 @@ document.addEventListener('DOMContentLoaded', function() {
         showNotification(message, type);
         alert.remove();
     });
+
+    // Share Quote Button functionality
+    const shareBtn = document.getElementById('share-quote-btn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', function() {
+            const quoteText = document.querySelector('.quote-text')?.innerText?.trim() || '';
+            let quoteAuthor = document.querySelector('.quote-author')?.innerText?.trim() || '';
+            // Remove leading dash and whitespace from author if present
+            quoteAuthor = quoteAuthor.replace(/^[-–—\s]+/, '');
+            const shareContent = `"${quoteText}." -${quoteAuthor}`;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Quote of the Day',
+                    text: shareContent
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(shareContent).then(() => {
+                    window.showNotification('Quote copied to clipboard!', 'success');
+                }, () => {
+                    window.showNotification('Could not copy quote.', 'error');
+                });
+            }
+        });
+    }
 });
 
 // Notification system (overlay)

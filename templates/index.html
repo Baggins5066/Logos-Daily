@@ -80,6 +80,10 @@
                                 <div class="text">Saved in Library</div>
                             </a>
                             {% endif %}
+                            <!-- Share Button -->
+                            <button type="button" class="shareBtn circle-btn" id="share-quote-btn" title="Share this quote">
+                                <i class="fas fa-share-alt icon"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -138,6 +142,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 quoteCard.classList.remove('animated-hidden');
                 quoteCard.classList.add('animated-reveal');
                 if (afterQuoteMsg) afterQuoteMsg.style.display = 'block';
+                // Attach share button event after quote is revealed
+                const shareBtn = document.getElementById('share-quote-btn');
+                if (shareBtn) {
+                    shareBtn.onclick = function() {
+                        const quoteText = document.querySelector('.quote-text')?.innerText?.trim() || '';
+                        let quoteAuthor = document.querySelector('.quote-author')?.innerText?.trim() || '';
+                        quoteAuthor = quoteAuthor.replace(/^[-–—\s]+/, '');
+                        const shareContent = `"${quoteText}." -${quoteAuthor}`;
+                        if (navigator.share) {
+                            navigator.share({
+                                title: 'Quote of the Day',
+                                text: shareContent
+                            }).catch(() => {});
+                        } else {
+                            navigator.clipboard.writeText(shareContent).then(() => {
+                                window.showNotification('Quote copied to clipboard!', 'success');
+                            }, () => {
+                                window.showNotification('Could not copy quote.', 'error');
+                            });
+                        }
+                    };
+                }
             }, 50);
         }
     }
